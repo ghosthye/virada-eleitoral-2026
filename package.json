@@ -1,0 +1,9 @@
+{
+  "name":"virada-eleitoral-2026",
+  "version":"1.0.0",
+  "private":true,
+  "type":"module",
+  "description":"A virada presidencial de 2026 explicada com dados oficiais do TSE.",
+  "scripts":{"dev":"node scripts/serve.mjs","test":"node --test tests/*.test.mjs"},
+  "engines":{"node":">=22"}
+}

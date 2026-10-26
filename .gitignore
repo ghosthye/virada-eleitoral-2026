@@ -1,0 +1,8 @@
+node_modules/
+downloads/
+.env
+.env.*
+*.zip
+*.tar.gz
+work/
+.DS_Store

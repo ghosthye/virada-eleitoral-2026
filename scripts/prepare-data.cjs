@@ -1,0 +1,29 @@
+const fs=require('fs'),path=require('path'),assert=require('assert/strict'),crypto=require('crypto');
+const {csvLines,csv}=require('./zip-csv.cjs');
+const root=path.resolve(__dirname,'../docs/data');fs.mkdirSync(path.join(root,'cities'),{recursive:true});
+const old=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../docs/data/overview.json'),'utf8'));
+const validCandidates=new Set(JSON.parse(fs.readFileSync(path.resolve(__dirname,'../sources/tse-br-1.json'),'utf8')).carg.find(c=>c.cd==='1').agr.flatMap(a=>a.par.flatMap(p=>p.cand)).filter(c=>c.dvt==='Válido').map(c=>+c.n));
+const cities=new Map(old.municipalities.map(m=>[m.uf+':'+String(+m.tse),{id:m.id,tse:m.tse,name:m.name,uf:m.uf,locals:[],localIndex:new Map(),sections:new Map()}]));
+const audit={voteRows:0,locationRows:0,voteTurns:{},locationsTurns:{},codes:{},csvTotals:[0,0,0,0,0],unmatchedCities:new Set(),mismatches:[],physicalSections:0,registeredSections:0,changedPrincipal:0,changedLocation:0};
+function local(city,z,n,name,address,alias,turn=1){const key=z+':'+n;let i=city.localIndex.get(key);if(i===undefined){i=city.locals.length;city.localIndex.set(key,i);city.locals.push({z,n,name,address,aliases:[]});}const l=city.locals[i];for(const value of [name,alias,l.name])if(value&&value!==l.name&&!l.aliases.includes(value))l.aliases.push(value);if(!l['name'+turn]){l['name'+turn]=name;l['address'+turn]=address;}if(turn===2){l.name=name;l.address=address;}return i;}
+function section(city,z,s){const key=z+':'+s;let r=city.sections.get(key);if(!r){r=[z,s,null,null,null,null,null,null,null,null,null];city.sections.set(key,r);}return r;}
+function indices(h){const ix=Object.fromEntries(h.map((n,i)=>[n,i]));return r=>new Proxy({}, {get:(_,n)=>r[ix[n]]});}
+(async()=>{
+ let head,get;
+ for await(const line of csvLines(path.resolve(__dirname,'../downloads/votes.zip'))){const r=csv(line);if(!head){head=r;get=indices(head);continue;}assert.equal(r.length,head.length,'Colunas votos');const v=get(r);assert.equal(v.ANO_ELEICAO,'2026');assert.equal(v.CD_CARGO,'1');audit.voteRows++;audit.voteTurns[v.NR_TURNO]=(audit.voteTurns[v.NR_TURNO]||0)+1;assert.equal(v.NR_TURNO,'1','Este coletor exige retrato primeiro turno e nao mistura dados');const code=+v.NR_VOTAVEL,n=+v.QT_VOTOS;assert(Number.isSafeInteger(n)&&n>=0);audit.codes[code]=(audit.codes[code]||0)+n;
+ const ci=code===13?0:code===22?1:code===95?3:code===96||!validCandidates.has(code)?4:2;audit.csvTotals[ci]+=n;if(code===13||code===22)audit.csvTotals[2]+=n;
+ const city=cities.get(v.SG_UF+':'+String(+v.CD_MUNICIPIO));if(!city){if(v.SG_UF!=='ZZ')audit.unmatchedCities.add(v.SG_UF+':'+v.CD_MUNICIPIO);continue;}
+ const z=+v.NR_ZONA,s=+v.NR_SECAO,l=local(city,z,+v.NR_LOCAL_VOTACAO,v.NM_LOCAL_VOTACAO,v.DS_LOCAL_VOTACAO_ENDERECO),sec=section(city,z,s);sec[4]=l;if(sec[6]===null)for(let i=6;i<11;i++)sec[i]=0;sec[6+ci]+=n;if(code===13||code===22)sec[8]+=n;
+ if(audit.voteRows%500000===0)console.log('VOTOS',audit.voteRows);
+ }
+ console.log('VOTOS FIM',audit.voteRows,audit.csvTotals);
+ head=null;
+ for await(const line of csvLines(path.resolve(__dirname,'../downloads/locations.zip'),'eleitorado_local_votacao_2026_BRASIL.csv')){const r=csv(line);if(!head){head=r;get=indices(head);continue;}assert.equal(r.length,head.length,'Colunas locais');const v=get(r);assert.equal(v.AA_ELEICAO,'2026');const t=+v.NR_TURNO;assert(t===1||t===2);audit.locationRows++;audit.locationsTurns[t]=(audit.locationsTurns[t]||0)+1;const city=cities.get(v.SG_UF+':'+String(+v.CD_MUNICIPIO));if(!city)continue;const z=+v.NR_ZONA,s=+v.NR_SECAO,sec=section(city,z,s),principal=+v.NR_SECAO_PRINCIPAL>0?+v.NR_SECAO_PRINCIPAL:s;sec[t+1]=principal;const l=local(city,z,+v.NR_LOCAL_VOTACAO,v.NM_LOCAL_VOTACAO,v.DS_ENDERECO,v.NM_LOCAL_VOTACAO_ORIGINAL,t);if(t===2||sec[4]===null)sec[t+3]=l;
+ if(audit.locationRows%250000===0)console.log('LOCAIS',audit.locationRows);
+ }
+ const expected=old.national.a.slice(0,5);assert.deepEqual(audit.csvTotals,expected,'CSV nacional vs totalizacao oficial');assert.equal(audit.unmatchedCities.size,0,'Municipio sem cadastro');
+ for(const m of old.municipalities){const c=cities.get(m.uf+':'+String(+m.tse)),sums=Array(5).fill(0);for(const sec of c.sections.values()){audit.registeredSections++;if(sec[6]!==null){audit.physicalSections++;for(let i=0;i<5;i++)sums[i]+=sec[6+i];}if(sec[2]!==sec[3])audit.changedPrincipal++;if(sec[4]!==sec[5])audit.changedLocation++;}if(sums.some((x,i)=>x!==m.a[i]))audit.mismatches.push({id:m.id,name:m.name,expected:m.a.slice(0,5),actual:sums});const sections=[...c.sections.values()].sort((a,b)=>a[0]-b[0]||a[1]-b[1]);fs.writeFileSync(path.join(root,'cities',m.id+'.json'),JSON.stringify({version:1,id:c.id,tse:c.tse,name:c.name,uf:c.uf,locals:c.locals,sections,columns:['zone','section','principal1','principal2','local1','local2','lula1','flavio1','valid1','blank1','null1']}));}
+ assert.equal(audit.mismatches.length,0,'Soma de secoes vs municipio');
+ const overview={version:2,collected:'2026-10-26',national:old.national,ufs:old.ufs,municipalities:old.municipalities.map(({id,tse,name,uf,a,b})=>({id,tse,name,uf,a,b})),audit:{...old.audit,sectionSource:'votacao_secao_2026_BR',secondRoundSections:'boletim-oficial-sob-demanda'}};
+ fs.writeFileSync(path.join(root,'overview.json'),JSON.stringify(overview));/* A malha IBGE existente permanece no snapshot map.json. */audit.unmatchedCities=[...audit.unmatchedCities];audit.hashes={votes:crypto.createHash('sha256').update(fs.readFileSync(path.resolve(__dirname,'../downloads/votes.zip'))).digest('hex'),locations:crypto.createHash('sha256').update(fs.readFileSync(path.resolve(__dirname,'../downloads/locations.zip'))).digest('hex')};fs.writeFileSync(path.resolve(__dirname,'../sources/secoes-integridade.json'),JSON.stringify(audit,null,2));fs.writeFileSync(path.join(root,'integrity.json'),JSON.stringify(audit,null,2));console.log('DONE',JSON.stringify(audit));
+})();
