@@ -12,7 +12,7 @@
 
 ## Testes automáticos
 
-`npm test`: 13 testes passaram, incluindo reconciliação de todas as cidades, matemática da virada, leitura de BUs reais, rejeição de dados inválidos, escolha única de geração totalizada e recusa de parâmetros não permitidos na API.
+`npm test`: 15 testes passaram, incluindo reconciliação de todas as cidades, matemática da virada, leitura de BUs reais, rejeição de dados inválidos, escolha única de geração totalizada e recusa de parâmetros não permitidos na API.
 
 Os manifestos em `sources/` registram as fontes e os hashes dos ZIPs oficiais usados na coleta; os ZIPs não são versionados no repositório. O CSV nominal de primeira geração e o EA20 têm diferenças de destinação descritas no README; a montagem só foi aceita após fechar as somas em todos os municípios.
 
@@ -43,3 +43,7 @@ Não houve teste em iPhone físico, Safari/WebKit ou navegador interno do Instag
 - A Escola Padre Antonio Barbosa Junior foi consultada pelo site público: oito urnas por turno, Lula 1.627 → 1.791, Flávio 444 → 474, mudança de margem +134. Nenhum erro ou aviso de console na consulta.
 - O erro de conexão informado pelo usuário coincidiu com a publicação inicial da API pública. Depois da publicação, tanto a seção quanto a soma completa da escola funcionaram no mesmo fluxo.
 - Acrescentada uma nova tentativa automática para interrupção de rede, mensagens em português e botão explícito de repetir a soma da escola. O cache da página passou a identificar a nova versão dos scripts. A queda de rede não foi simulada no navegador; os resultados positivos acima foram consultados de fato.
+
+## Compatibilidade com a hospedagem do espelho
+
+A checagem do endereço do espelho encontrou respostas 500 nas rotas de dados. Os logs de produção identificaram a causa: o ambiente não permite acessar o cache padrão. Essa dependência foi removida das rotas de dados e da API. Os dados estáticos continuam com cache HTTP no navegador e CDN de origem, e a API mantém cache em memória e deduplicação. Foi adicionado um teste de regressão que simula a indisponibilidade do cache da hospedagem e confirma tanto JSON quanto BU, além de um teste que recusa encaminhar URLs arbitrárias.
