@@ -35,4 +35,11 @@ Testado no navegador integrado Chromium com dados reais:
 
 Não houve teste em iPhone físico, Safari/WebKit ou navegador interno do Instagram. Pinça foi implementada, mas não testada em aparelho físico. Não foi feita uma simulação de queda de rede ou bloqueio de CORS no navegador; a API evita a dependência de CORS do TSE e trata falhas sem inventar resultados. Não foram consultadas todas as urnas do segundo turno: a busca consulta sob demanda, e a reconciliação completa de 36 urnas foi feita em município de amostra.
 
-A checagem final da publicação anônima é registrada na entrega.
+## Publicação pública e reprodução do erro informado
+
+- GitHub Pages e espelho responderam HTTP 200 sem autenticação. HTML, JavaScript, CSS, JSON de município de amostra e prévia JPEG também responderam 200.
+- API hospedada retornou HTTP 200 e Access-Control-Allow-Origin: * para a seção 142 / zona 94 de município de amostra. O retorno real foi Lula 212, Flávio 62, válidos 274, brancos 5 e nulos 8.
+- No navegador, o GitHub Pages consultou a API do espelho por CORS e exibiu a seção 142: Lula 191 → 212 e Flávio 58 → 62.
+- A Escola Padre Antonio Barbosa Junior foi consultada pelo site público: oito urnas por turno, Lula 1.627 → 1.791, Flávio 444 → 474, mudança de margem +134. Nenhum erro ou aviso de console na consulta.
+- O erro de conexão informado pelo usuário coincidiu com a publicação inicial da API pública. Depois da publicação, tanto a seção quanto a soma completa da escola funcionaram no mesmo fluxo.
+- Acrescentada uma nova tentativa automática para interrupção de rede, mensagens em português e botão explícito de repetir a soma da escola. O cache da página passou a identificar a nova versão dos scripts. A queda de rede não foi simulada no navegador; os resultados positivos acima foram consultados de fato.
