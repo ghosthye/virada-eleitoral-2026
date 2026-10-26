@@ -12,3 +12,5 @@
 /* One vector mark keeps the A Virada logo identical across browser fonts and devices. */
 .brand-symbol{display:inline-flex;align-items:center;justify-content:center;width:29px;height:32px;flex:0 0 auto;color:var(--red);font-size:0;line-height:1}.brand-symbol svg{display:block;width:22px;height:22px;overflow:visible}.brand-symbol path{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:600px){.brand-symbol{width:26px;height:28px}.brand-symbol svg{width:20px;height:20px}}
+
+.map-city-label{position:absolute;left:16px;top:16px;z-index:2;max-width:calc(100% - 82px);padding:9px 13px;border:1px solid rgba(255,255,255,.34);border-radius:7px;background:rgba(20,46,62,.92);color:#fff;font-size:14px;font-weight:700;line-height:1.25;letter-spacing:.1px;text-shadow:0 1px 2px rgba(0,0,0,.2);box-shadow:0 2px 10px rgba(20,46,62,.14);pointer-events:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}@media(max-width:600px){.map-city-label{left:11px;top:11px;max-width:calc(100% - 70px);padding:8px 10px;font-size:12px}}
