@@ -6,3 +6,8 @@ downloads/
 *.tar.gz
 work/
 .DS_Store
+
+__pycache__/
+*.pyc
+browser-audit-profile/
+qa-artifacts*/

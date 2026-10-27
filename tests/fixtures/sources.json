@@ -1,0 +1,82 @@
+[
+  {
+    "filename": "sample-pe-31-2t.dat",
+    "municipality": 25313,
+    "zone": 1,
+    "section": 31,
+    "votes": [
+      138,
+      173,
+      311,
+      2,
+      2
+    ],
+    "source": {
+      "aux": "https://resultados.tse.jus.br/oficial/ele2026/arquivo-urna/3221/dados/pe/25313/0001/0031/p003221-pe-m25313-z0001-s0031-aux.json",
+      "bu": "https://resultados.tse.jus.br/oficial/ele2026/arquivo-urna/3221/dados/pe/25313/0001/0031/7062374e655553564450333548364b387a33426e70414672434c696f4f577039516d4d63435a6e693455343d/o03221pe2531300010031-bu.dat",
+      "generation": "20261025T171003",
+      "hash": "7062374e655553564450333548364b387a33426e70414672434c696f4f577039516d4d63435a6e693455343d",
+      "apportionment": "Urna eletrônica"
+    }
+  },
+  {
+    "filename": "sample-pe-32-2t.dat",
+    "municipality": 25313,
+    "zone": 1,
+    "section": 32,
+    "votes": [
+      136,
+      164,
+      300,
+      0,
+      3
+    ],
+    "source": {
+      "aux": "https://resultados.tse.jus.br/oficial/ele2026/arquivo-urna/3221/dados/pe/25313/0001/0032/p003221-pe-m25313-z0001-s0032-aux.json",
+      "bu": "https://resultados.tse.jus.br/oficial/ele2026/arquivo-urna/3221/dados/pe/25313/0001/0032/76674f5a59344e473463646b4b307158565873714477757477387536784c4c4b5149586c2d357553436d6b3d/o03221pe2531300010032-bu.dat",
+      "generation": "20261025T171005",
+      "hash": "76674f5a59344e473463646b4b307158565873714477757477387536784c4c4b5149586c2d357553436d6b3d",
+      "apportionment": "Urna eletrônica"
+    }
+  },
+  {
+    "filename": "sample-pe-33-2t.dat",
+    "municipality": 25313,
+    "zone": 1,
+    "section": 33,
+    "votes": [
+      146,
+      169,
+      315,
+      4,
+      0
+    ],
+    "source": {
+      "aux": "https://resultados.tse.jus.br/oficial/ele2026/arquivo-urna/3221/dados/pe/25313/0001/0033/p003221-pe-m25313-z0001-s0033-aux.json",
+      "bu": "https://resultados.tse.jus.br/oficial/ele2026/arquivo-urna/3221/dados/pe/25313/0001/0033/634469492d724741754241362b74383753766f56736b5868563842774a307852657379584e3550443175303d/o03221pe2531300010033-bu.dat",
+      "generation": "20261025T170910",
+      "hash": "634469492d724741754241362b74383753766f56736b5868563842774a307852657379584e3550443175303d",
+      "apportionment": "Urna eletrônica"
+    }
+  },
+  {
+    "filename": "sample-sp-1-2t.dat",
+    "municipality": 71072,
+    "zone": 1,
+    "section": 1,
+    "votes": [
+      145,
+      112,
+      257,
+      3,
+      6
+    ],
+    "source": {
+      "aux": "https://resultados.tse.jus.br/oficial/ele2026/arquivo-urna/3221/dados/sp/71072/0001/0001/p003221-sp-m71072-z0001-s0001-aux.json",
+      "bu": "https://resultados.tse.jus.br/oficial/ele2026/arquivo-urna/3221/dados/sp/71072/0001/0001/4f4c31366f386944417050754266457a475277346c78446e6d6d315066764c74722b3845315971495570553d/o03221sp7107200010001-bu.dat",
+      "generation": "20261025T190444",
+      "hash": "4f4c31366f386944417050754266457a475277346c78446e6d6d315066764c74722b3845315971495570553d",
+      "apportionment": "Urna eletrônica"
+    }
+  }
+]

@@ -1,126 +1,23 @@
-# Verificação do projeto
+# Verificação do projeto — 27/10/2026
 
-## Dados e método
+## Dados e estimativa própria
 
-- Resultados nacionais, UFs e 5.571 unidades eleitorais nacionais reconciliados nos dois turnos, incluindo exterior no total nacional. O retrato original passou por 122.166 verificações numéricas e estruturais em 11.572 arquivos EA20.
-- 3.800.511 linhas do CSV presidencial por seção lidas integralmente. O CSV só contém o primeiro turno. Todas as seções foram agregadas por município e os cinco campos de votos coincidiram exatamente com o EA20: Lula, Flávio, válidos, brancos e nulos.
-- 1.034.358 linhas do cadastro de locais lidas: 517.179 por turno. Para unidades nacionais, foram preservados 514.464 registros de seções e 497.897 urnas com votação no primeiro turno.
-- 36 BUs reais do segundo turno de município de amostra-PE consultados e somados: Lula 7.734, Flávio 1.986, válidos 9.720, brancos 86, nulos 209, comparecimento 10.015 e aptos 12.361. Todos coincidem com o EA20 municipal. URLs e relatório em `tests/município de amostra-validation.json`.
-- BUs adicionais do Acre, com outra eleição coexistente, e de Katmandu, com Sistema de Apuração, usados para validar variantes.
-- Cinco arquivos de BU reais preservados para testes. Conteúdo truncado, bytes extras, ambiente simulado, tamanho e estrutura inválidos são rejeitados.
-- Assinaturas criptográficas não verificadas. Os testes conferem leitura numérica e identidade, não são auditoria da eleição.
+A estimativa utiliza 5.757 unidades territoriais (municípios e locais no exterior), com 11.514 arquivos oficiais EA20 identificados por URL e SHA-256. Todos os totais de origem e destino são preservados. A base contábil por unidade usa o maior eleitorado dos dois turnos; o ajuste não acrescenta votos aos candidatos.
 
-## Testes automáticos
+O modelo usa regressão ecológica com restrições por região, calibração às margens municipais, 200 reamostragens estratificadas por UF e seis especificações alternativas. As faixas são envelopes de sensibilidade, não intervalos de confiança validados. O fechamento das somas e os testes sintéticos não comprovam transferências individuais.
 
-`npm test`: 15 testes passaram, incluindo reconciliação de todas as cidades, matemática da virada, leitura de BUs reais, rejeição de dados inválidos, escolha única de geração totalizada e recusa de parâmetros não permitidos na API.
+Seis testes específicos verificam fontes, matrizes, agregações, totais nacionais, diagnósticos e interface. Três testes Python verificam recuperação de parâmetros em dados sintéticos, calibração/arredondamento e envelopes de sensibilidade.
 
-Os manifestos em `sources/` registram as fontes e os hashes dos ZIPs oficiais usados na coleta; os ZIPs não são versionados no repositório. O CSV nominal de primeira geração e o EA20 têm diferenças de destinação descritas no README; a montagem só foi aceita após fechar as somas em todos os municípios.
+## Funcionalidades preservadas
+
+Vinte testes cobrem API, boletins reais, rejeição de entradas inválidas, resultados territoriais, hospedagem e matemática das diferenças entre turnos. Os exemplos usam São Paulo-SP e Recife-PE. Boletins oficiais de Recife, São Paulo, Acre e exterior verificam variantes do formato. Não verificamos assinaturas criptográficas; estes testes não constituem auditoria eleitoral.
 
 ## Navegador
 
-O registro final de verificações de navegação, publicação e limites está na seção abaixo, preenchida durante a entrega. Testes em viewport de celular não substituem teste em aparelho físico ou Safari/WebKit.
+Dezoito verificações passaram em Chromium real, com larguras de 320, 390, 430 e 1.440 pixels: carregamento do modelo, grupos e detalhes, clique real e teclado no Sankey, buscas de Recife e São Paulo, troca de UF, ampliação, ausência de transbordamento da página, mapas e cards, fontes e recuperação após erro HTTP 503 simulado. A falha não substitui resultados por zero. Relatório em `tests/own-migration-review-2026-10-27.json`.
 
-Testado no navegador integrado Chromium com dados reais:
+Não foi realizado teste em iPhone físico ou Safari/WebKit. A emulação de largura mobile não substitui esses testes.
 
-- Tela de 390 × 844: abertura, leitura dos três passos, conta e navegação.
-- Telas de 320 × 844, 430 × 932 e 1.440 × 1.000: ausência de excesso horizontal da página; navegação, abertura e ranking inspecionados.
-- Busca município de amostra-PE → Escola local de exemplo → soma automática de dez urnas em cada turno. Resultado observado: Lula 1.954 → 2.180; Flávio 531 → 607; mudança de margem +150.
-- Seleção separada da seção 113 / zona 94: Lula 196 → 218, Flávio 47 → 60, mudança de margem +9. Links oficiais exibidos.
-- Seção 98 / zona 17 de Alta Floresta D'Oeste-RO: mapeada à urna principal 81, aviso de grupo 81 + 98 e votos conjuntos. Lula 91 → 110, Flávio 50 → 41.
-- Seção 80 / zona 17 do mesmo município: aviso de mudança no cadastro do local e grupo 80 + 100. Não foi apresentada como votação isolada.
-- Mapa carregou 5.570 polígonos, filtro PE, modo mudança de margem e zoom por botão.
-- Card para stories gerado por clique e baixado: PNG 1080 × 1920.
-- Prévia social renderizada e salva: JPEG 1199 × 630.
-- Nenhum erro/aviso de console na sessão inspecionada.
+## Reprodução
 
-Não houve teste em iPhone físico, Safari/WebKit ou navegador interno do Instagram. Pinça foi implementada, mas não testada em aparelho físico. Não foi feita uma simulação de queda de rede ou bloqueio de CORS no navegador; a API evita a dependência de CORS do TSE e trata falhas sem inventar resultados. Não foram consultadas todas as urnas do segundo turno: a busca consulta sob demanda, e a reconciliação completa de 36 urnas foi feita em município de amostra.
-
-## Publicação pública e reprodução do erro informado
-
-- GitHub Pages e espelho responderam HTTP 200 sem autenticação. HTML, JavaScript, CSS, JSON de município de amostra e prévia JPEG também responderam 200.
-- API hospedada retornou HTTP 200 e Access-Control-Allow-Origin: * para a seção 142 / zona 94 de município de amostra. O retorno real foi Lula 212, Flávio 62, válidos 274, brancos 5 e nulos 8.
-- No navegador, o GitHub Pages consultou a API do espelho por CORS e exibiu a seção 142: Lula 191 → 212 e Flávio 58 → 62.
-- A Escola Padre Antonio Barbosa Junior foi consultada pelo site público: oito urnas por turno, Lula 1.627 → 1.791, Flávio 444 → 474, mudança de margem +134. Nenhum erro ou aviso de console na consulta.
-- O erro de conexão informado pelo usuário coincidiu com a publicação inicial da API pública. Depois da publicação, tanto a seção quanto a soma completa da escola funcionaram no mesmo fluxo.
-- Acrescentada uma nova tentativa automática para interrupção de rede, mensagens em português e botão explícito de repetir a soma da escola. O cache da página passou a identificar a nova versão dos scripts. A queda de rede não foi simulada no navegador; os resultados positivos acima foram consultados de fato.
-
-## Compatibilidade com a hospedagem do espelho
-
-A checagem do endereço do espelho encontrou respostas 500 nas rotas de dados. Os logs de produção identificaram a causa: o ambiente não permite acessar o cache padrão. Essa dependência foi removida das rotas de dados e da API. Os dados estáticos continuam com cache HTTP no navegador e CDN de origem, e a API mantém cache em memória e deduplicação. Foi adicionado um teste de regressão que simula a indisponibilidade do cache da hospedagem e confirma tanto JSON quanto BU, além de um teste que recusa encaminhar URLs arbitrárias.
-
-## Atualização do kit editorial e da decomposição territorial (26/10/2026)
-
-- `npm test`: 20 testes passaram. Foram acrescentadas cinco verificações para a identidade contábil municipal, o caso de Palmares, componentes negativos, inversão de margem e totais incoerentes.
-- `node --check docs/app.js`: passou.
-- Prévia local em Chromium integrado, viewport reportado de 618 × 764: a aplicação carregou como módulo, respondeu à seleção de cidade e mostrou Palmares com valores do conjunto TSE. A conta detalhada fechou: demais candidatos +1.484; comparecimento +1.330; redução de brancos/nulos +580; crescimento conjunto +3.394; Lula +2.957; Flávio +437; mudança da margem +2.520.
-- O mapa interativo foi preparado e o documento não excedeu a largura da viewport (documento 603 px; viewport 618 px). Isso não substitui testes em aparelhos físicos, Safari/iPhone ou telas desktop largas.
-- A nova cronologia e o FAQ foram incluídos com as fontes indicadas junto às afirmações. Não foi feita uma nova auditoria externa de cada página durante esta verificação local.
-- Não foi publicado nem enviado ao repositório remoto nesta atualização; o trabalho está na branch `codex/kit-update-2026`.
-
-## Restauração do card original e mapa (27/10/2026)
-
-- Restaurada a arte enviada pelo usuário, com proporções preservadas, domínio avirada.pages.dev e uma faixa para o adesivo de link entre o mapa e os dados de crescimento. O mapa ilustrativo da arte é substituído pelo resultado municipal do segundo turno antes da montagem do PNG 1080 × 1920.
-- Geração e prévia do card conferidas visualmente no Chromium integrado; mapa oficial, domínio e espaço para o adesivo apareceram na prévia.
-- O mapa interativo passou a usar até 3 pixels por pixel CSS em telas compatíveis, limitado a 2,2 milhões de pixels. O redesenho imediato dos botões de zoom mantém o cache durante gestos.
-- Seleção real no navegador: com filtro PE, o clique num município vizinho selecionou Ouro Branco-RN e atualizou o filtro para RN; o rótulo e os dados corresponderam à cidade. O botão de zoom foi exercitado.
-- npm test: 20/20 passaram; node --check docs/app.js e git diff --check passaram. Não houve teste em iPhone físico nem medição de fluidez em aparelho real.
-
-## Revisão editorial e funcional para publicação (27/10/2026)
-
-- Conteúdo revisado como perguntas factuais, sem pressupor preferência partidária: 10 milhões versus votos nas candidaturas eliminadas; limites da inferência de migração individual; mudanças de liderança nas parciais; votos após 17h e fila; prorrogação; mapa por área versus soma de votos; BU; escopo do TCU em 2022; pesquisas eleitorais.
-- As dez perguntas agora são cartões expansíveis separados. A conta nacional ganhou uma explicação direta sobre por que saldos não rastreiam quem trocou de candidato. A comparação dos registros após 17h com a margem final foi identificada como aritmética, com limite do recorte. A descrição do TCU foi precisada para os votos confrontados nas amostras, incluindo a existência de outros achados no relatório.
-- Fontes primárias consultadas: totalizações nacionais atuais dos dois turnos, nota do TSE sobre pausa e retomada, decisão/notícia do STF, sigilo do voto pelo TRE-SP e relatório/notícia do TCU. Os 27 links externos do HTML responderam HTTP 200; resposta HTTP, isoladamente, não é validação do conteúdo. As fontes jornalísticas permanecem atribuídas e as contagens de recortes diferentes não são misturadas.
-- 20/20 testes Node passaram, com reconciliação municipal, matemática, BUs e API.
-- 16/16 verificações adicionais passaram em Brave/Chromium headless, usando perfil independente: viewports 1440×1000, 320×844, 390×844 e 430×932; abertura sem excesso horizontal; legenda sem sobreposição; três passos; conta exata; dez dúvidas; busca município de amostra-PE; Escola local de exemplo e soma completa; município de amostra seção 142/zona 94; Palmares seção 31/zona 37 e conta municipal; mapa/filtro/seleção/modos/zoom; PNG real 1080×1920; erro de consulta simulado com preservação do primeiro turno e nova tentativa; ausência de exceções JavaScript.
-- A primeira execução identificou a sobreposição da legenda no desktop, corrigida antes da execução final. A simulação retornou HTTP 503 de propósito na API da seção; esse erro esperado consta no relatório.
-- API pública do espelho: seção 142/zona 94 de município de amostra retornou HTTP 200, CORS `*`, Lula 212 e Flávio 62. A assinatura criptográfica não é verificada pelo aplicativo.
-- Relatório: `tests/publication-review-2026-10-27.json`. Não houve teste em iPhone físico, Safari/WebKit ou no aplicativo Instagram. A revisão não promete responder a toda alegação possível nem equivale a auditoria forense da eleição.
-
-### Confirmação após publicar
-
-A versão de código `281653ec506e31f566018d6dd41e1098abfc5670` foi enviada à branch `main` após a autorização do usuário. Cloudflare Pages (avirada.pages.dev) e GitHub Pages responderam HTTP 200 com o HTML novo, incluindo módulo app.js v21 e as perguntas da revisão. As mesmas 16 verificações de navegador passaram contra https://avirada.pages.dev/, incluindo a API real de boletins e o retry após uma resposta 503 simulada com CORS. O relatório JSON inclui os resultados de produção. Não há promessa de disponibilidade futura das fontes externas.
-
-## Compartilhamento de imagem sem download automático (27/10/2026)
-
-- Preparar o card gera a prévia e um arquivo PNG em memória. O app não chama mais o download automaticamente. Em navegadores com compartilhamento de arquivos, usa o seletor nativo; se o preparo encerrar a ativação temporária, o botão “Escolher aplicativo” inicia o envio em um novo toque. O usuário ainda pode usar “Salvar imagem” explicitamente.
-- O envio nativo contém somente o File PNG. O site não promete selecionar Instagram/WhatsApp, abrir Stories/Status nem posicionar um adesivo clicável. Há botão para copiar o endereço e alternativa de seleção manual se o clipboard falhar.
-- 14 verificações passaram: quatro larguras sem excesso horizontal, legenda da abertura, ausência de download automático em navegador sem suporte, payload PNG, ativação por toque real, abertura após preparo com ativação válida, cancelamento, bloqueio, cópia do link/fallback, canShare com erro e ausência de exceções JavaScript. As interfaces nativas de share/canShare/clipboard foram simuladas; o PNG e a prévia foram gerados de fato no navegador. Relatório: `tests/story-share-review-2026-10-27.json`.
-- Os 20 testes Node existentes passaram. Não houve teste físico em iPhone nem abertura real dos aplicativos Instagram e WhatsApp. A integração efetiva com cada aplicativo depende das opções que ele disponibiliza no aparelho.
-
-## Carrossel de compartilhamento — 27/10/2026
-
-Quatro modelos em PNG 1080×1920: nacional (arte original preservada), seção, cidade e estado. Novos modelos gerados em canvas, com espaço para adesivo e mapa municipal do segundo turno vindo dos mesmos dados do site. Carregamento só ao aproximar da galeria; imagens reutilizadas em memória.
-
-Auditoria em Chromium real: 19 verificações passaram, incluindo tamanho dos quatro PNGs, arquivo correto ao selecionar/compartilhar, setas, rolagem, teclado, links por tema, ausência de download automático e de transbordamento em 320, 390, 430 e 1440 px. PNGs e capturas inspecionados visualmente. Relatório: `tests/story-carousel-review-2026-10-27.json`.
-
-O envio nativo e a área de transferência foram simulados para verificar os arquivos e argumentos. Não foram testados Instagram/WhatsApp reais nem iPhone físico. O adesivo de link continua sendo adicionado pelo usuário no Instagram.
-
-## Cenários entre turnos — 27/10/2026
-
-Implementação original de diagrama Sankey no visual do A Virada. Não foram copiados código, textos, recursos gráficos ou estimativas do site de referência. As ligações são cenários de transporte, não uma estimativa de migração, pesquisa de opinião ou inferência ecológica.
-
-O usuário escolhe uma ligação e um valor inteiro dentro dos limites matemáticos. Um problema de transporte de custo mínimo fecha as outras ligações, priorizando manter categorias. O exemplo inicial fixa “Demais candidatos → Lula” no meio dos seus limites; isso é uma convenção didática, não maior probabilidade. O método e suas limitações aparecem na interface. Uma diferença no eleitorado gera nó explícito de ajuste. O saldo não classificado é explicado, sem atribuição a abstenção.
-
-Validação automática: 26 testes do projeto passaram, dos quais seis verificam os cenários. Brasil, todas as UFs e todos os 5.571 registros municipais foram reconciliados com os totais publicados, nos cenários inicial, mínimo, intermediário e máximo da ligação de demais candidatos para Lula. Tabelas sintéticas exercitaram todos os pares e seus extremos, além de casos inviáveis e eleitorados diferentes.
-
-No Chromium real, passaram 18 verificações: abertura sob demanda, mudança de hipótese, faixas por clique/teclado, clique real por ponteiro, PE, município de amostra-PE, troca de recortes, intervalo e valor intermediário, tabela/método, recomeço e preservação de estado. Sem transbordamento horizontal em 320, 390, 430 e 1440 px. Capturas de Brasil, Pernambuco e município de amostra inspecionadas. Não houve teste em iPhone físico. Relatório: `tests/flow-scenarios-review-2026-10-27.json`.
-
-Fontes metodológicas consultadas: TSE, “Votação segura” (RDV e sigilo); Jiang, King, Schmaltz e Tanner (2019), “Ecological Regression with Partial Identification”. O estimador do artigo não foi implementado. A fórmula de limites nesta versão é a restrição de margens de uma tabela de transporte, sem probabilidades ou intervalos de confiança.
-
-## Faixas e categorias separadas — revisão de 27/10/2026
-
-O gráfico agora separa brancos/nulos de abstenção. Eventual saldo não classificado tem nó próprio. Permanência e mudança usam intensidades diferentes; a ligação escolhida recebe quantidade na faixa e detalhe próximo ao gráfico. Os cenários continuam independentes por recorte, sem extrapolação de taxas nacionais para cidades.
-
-A busca pública pelos textos e valores da imagem de referência não confirmou a publicação original nem sua autoria. A interface registra essa limitação, em vez de atribuí-la ao TSE ou a um instituto. A referência técnica para o tipo de visualização é a documentação oficial D3 Sankey, https://github.com/d3/d3-sankey; não usamos código ou dependências dessa biblioteca. A seção Fontes contém composição das categorias, regras de transporte, limites de cada ligação, ajuste de base, critério inicial e distinção entre totais oficiais e cenários.
-
-Passaram 27 testes do projeto, incluindo a separação das categorias para Brasil, UFs e todos os municípios. Na versão final, passaram 20 verificações em Chromium real, com clique por ponteiro, teclado, valores e pesquisa de recortes. Capturas inspecionadas em 320, 390, 430 e 1440 px. Sem teste em iPhone físico. Relatório: `tests/flow-categories-review-2026-10-27.json`.
-
-## Análise externa nacional — 27/10/2026
-
-A seção pública do simulador foi substituída por “De onde vieram os votos? Uma estimativa”. O gráfico original de Figuretti (@elfiguretti) é carregado do servidor de imagens do X, sem widget ou script de terceiros. A autoria, o link original, a natureza estimada e a escala reduzida da abstenção (1:4) aparecem junto à imagem. As notas metodológicas foram resumidas com atribuição e sem alegar reprodução ou auditoria do modelo.
-
-Cinco barras em português resumem os percentuais arredondados do texto do post. O restante não detalhado é hachurado; percentual não informado de Flávio fica como não informado. Não multiplicamos essas taxas por totais oficiais, não reconstruímos matriz incompleta e não apresentamos estimativas locais. Procedência e números: `docs/data/migration-estimate.json`. Se a imagem externa falhar, ficam o resumo e o link original.
-
-Passaram 20 testes relevantes da versão ativa (API, BUs, dados, hospedagem e decomposição territorial) e 19 verificações em Chromium real: fonte, imagem real, ressalvas, cinco grupos, dados não informados, teclado, consulta de município de amostra, quatro cards de compartilhamento e telas de 320, 390, 430 e 1440 px. Falha da imagem externa foi simulada com resposta 503 e teve alternativa correta. Não houve teste em iPhone físico. Relatório: `tests/migration-analysis-review-2026-10-27.json`.
-
-Os arquivos do antigo simulador não são mais importados pela página. Havia uma alteração local pré-existente em `docs/flow-math.js`; ela foi preservada e não integra esta publicação. Os testes desse módulo legado não foram incluídos na seleção de testes da versão ativa. Os dados, mapas e funções oficiais do painel não foram alterados.
+Execute `npm test`. Para os testes numéricos, instale `scripts/migration-requirements.txt` e execute `python -m unittest discover -s tests -p test_migration_fit.py -v`. A reconstrução dos dados requer os arquivos oficiais originais; consulte o README e os manifestos em `docs/data/migration/`.

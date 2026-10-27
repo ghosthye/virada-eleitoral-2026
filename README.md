@@ -19,7 +19,7 @@ Flávio começou com **2.224.965 votos de vantagem**. Entre os turnos, Lula cres
 =10.376.694  crescimento de Lula
 ```
 
-A identidade compara **saldos agregados**. Não identifica transferências individuais nem demonstra, sozinha, causas políticas da vitória. O site não faz inferências sobre o voto de pessoas, alunos ou funcionários de escolas.
+A identidade compara **saldos agregados**. Não identifica transferências individuais nem demonstra, sozinha, causas políticas da vitória. O modelo próprio de migração estima padrões agregados, com hipóteses e sensibilidade. Não identifica o voto de pessoas, alunos ou funcionários de escolas.
 
 ## Consulta por escola e seção
 
@@ -74,7 +74,7 @@ docs/data/cities/     cadastro local e votos do primeiro turno, por município
 server/              API somente leitura e leitor ASN.1 de BU
 scripts/             servidor, coleta e montagem reproduzível
 sources/             fontes nacionais, esquema oficial e manifestos de integridade
-tests/               dados reais de teste, testes automáticos e reconciliação de município de amostra
+tests/               dados reais de teste, testes automáticos e reconciliações com fontes oficiais
 deploy/              adaptação do mesmo projeto para o espelho
 ```
 
@@ -85,3 +85,23 @@ Os ZIPs oficiais são grandes e ficam fora do Git. Para refazer os dados, use `n
 Sem cadastro, título eleitoral, CPF, geolocalização ou bibliotecas de rastreamento no código da página. São resultados públicos agregados, não informações sobre eleitores individuais. Os provedores de hospedagem seguem suas próprias políticas de logs e rede.
 
 Código deste projeto: licença MIT. Dados eleitorais: TSE, com atribuição conforme o portal. Geografia: IBGE, com atribuição. Este projeto não é um site oficial da Justiça Eleitoral.
+
+## Estimativa própria de migração
+
+O Sankey usa uma regressão ecológica restrita própria, separada dos resultados oficiais. São 5.571 municípios e 186 recortes no exterior. As taxas são ajustadas por macrorregião, com regularização escolhida por validação em três partes; uma calibração às margens preserva as bases oficiais locais. A análise inclui 200 reamostragens estratificadas por UF e seis especificações de sensibilidade. O envelope exibido **não é um intervalo de confiança com cobertura validada** e não elimina viés ecológico.
+
+Lula, Flávio, Cury, Caiado, Renan e Zema são separados. Outros candidatos, brancos/nulos, abstenção e ajustes cadastrais têm categorias próprias. A projeção de uma cidade usa o modelo regional, sem alegar ajuste independente para seus moradores. A mesma escala é usada em todo o Sankey.
+
+As entradas, hashes, modelo, diagnósticos e arquivos por UF ficam em docs/data/migration/. O modelo é carregado somente quando a seção se aproxima da tela; os recortes locais são carregados por UF. O site não depende de gráficos ou taxas de terceiros.
+
+Para reproduzir a partir das entradas publicadas:
+
+```sh
+python -m pip install -r scripts/migration-requirements.txt
+python scripts/fit-migration.py --input docs/data/migration/inputs.json --output docs/data/migration --replicates 200
+python -m unittest discover -s tests -p test_migration_fit.py
+```
+
+Se tiver cópias dos EA20 das URLs e nomes do manifesto, as entradas também podem ser reconstruídas com node scripts/build-migration-inputs.mjs CAMINHO_DOS_EA20 docs/data/migration. Não há validação de trajetórias individuais ou auditoria de integridade de urnas.
+
+Exemplos públicos de navegação e de testes usam São Paulo-SP e Recife-PE. O cadastro eleitoral continua completo para todos os municípios; nenhum deles é associado à localização de quem mantém o projeto.

@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-27T12:49:13.892Z",
+  "results": [
+    {
+      "name": "Modelo próprio carregado sem gráfico externo ou simulador",
+      "pass": true
+    },
+    {
+      "name": "Candidatos são separados e os dez grupos têm detalhe de destinos",
+      "pass": true
+    },
+    {
+      "name": "Sensibilidade e proximidade de limites não aparecem como certeza individual",
+      "pass": true
+    },
+    {
+      "name": "Clique em faixa mostra origem e destino correspondentes",
+      "pass": true
+    },
+    {
+      "name": "Teclado seleciona uma faixa sem perder o foco",
+      "pass": true
+    },
+    {
+      "name": "Clique real por ponteiro seleciona uma faixa visível",
+      "pass": true
+    },
+    {
+      "name": "Recife é exemplo público e tem projeção local explicitamente regional",
+      "pass": true
+    },
+    {
+      "name": "São Paulo carrega por busca com acento e UF",
+      "pass": true
+    },
+    {
+      "name": "Filtro estadual e retorno ao Brasil preservam totais e matriz",
+      "pass": true
+    },
+    {
+      "name": "Ampliar mantém o gráfico no próprio contêiner",
+      "pass": true
+    },
+    {
+      "name": "Sem transbordamento da página em 320px",
+      "pass": true
+    },
+    {
+      "name": "Sem transbordamento da página em 390px",
+      "pass": true
+    },
+    {
+      "name": "Sem transbordamento da página em 430px",
+      "pass": true
+    },
+    {
+      "name": "Sem transbordamento da página em 1440px",
+      "pass": true
+    },
+    {
+      "name": "Mapa e cards continuam carregando",
+      "pass": true
+    },
+    {
+      "name": "Fontes registram algoritmo, dados, hipóteses e ausência de prova individual",
+      "pass": true
+    },
+    {
+      "name": "Falha de um arquivo local não vira estimativa zero e permite repetir",
+      "pass": true
+    },
+    {
+      "name": "Sem exceções JavaScript",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "httpErrors": [
+    {
+      "url": "http://localhost:8787/data/migration/ba.json?v=3",
+      "status": 503
+    }
+  ],
+  "note": "Chromium real; larguras mobile emuladas. Sem iPhone físico. Estimativa ecológica exploratória, não observação individual."
+}
