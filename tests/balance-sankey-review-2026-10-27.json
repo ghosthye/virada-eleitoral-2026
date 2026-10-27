@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-27T14:11:24.725Z",
+  "target": "http://localhost:8787",
+  "browser": "Chrome real, mobile emulation; no physical iPhone",
+  "results": [
+    {
+      "name": "Sankey nacional tem oito parcelas e dois saldos",
+      "pass": true
+    },
+    {
+      "name": "Crescimento nacional exato",
+      "pass": true
+    },
+    {
+      "name": "Limites de 0 a 100 ficam recolhidos",
+      "pass": true
+    },
+    {
+      "name": "Toque em Cury explica grupo oficial sem atribuir destino",
+      "pass": true
+    },
+    {
+      "name": "Teclado abre saldo de Flávio",
+      "pass": true
+    },
+    {
+      "name": "Seleção de estado atualiza o gráfico",
+      "pass": true
+    },
+    {
+      "name": "Município Recife atualiza as parcelas",
+      "pass": true
+    },
+    {
+      "name": "Queda local de candidato é representada",
+      "pass": true
+    },
+    {
+      "name": "Recorte local tem saldo negativo correto",
+      "pass": true
+    },
+    {
+      "name": "Sem transbordamento em 320 px",
+      "pass": true
+    },
+    {
+      "name": "SVG finito em 320 px",
+      "pass": true
+    },
+    {
+      "name": "Sem transbordamento em 430 px",
+      "pass": true
+    },
+    {
+      "name": "SVG finito em 430 px",
+      "pass": true
+    },
+    {
+      "name": "Sem transbordamento em 1440 px",
+      "pass": true
+    },
+    {
+      "name": "SVG finito em 1440 px",
+      "pass": true
+    },
+    {
+      "name": "Sem exceções JavaScript",
+      "pass": true
+    },
+    {
+      "name": "Novos arquivos e dados responderam HTTP 200",
+      "pass": true
+    }
+  ],
+  "requests": [
+    {
+      "url": "http://localhost:8787/balance-sankey.js?v=1",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:8787/data/overview.json",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:8787/data/flow-bounds/bounds.json?v=1",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:8787/data/flow-bounds/pe.json?v=1",
+      "status": 200
+    },
+    {
+      "url": "http://localhost:8787/data/flow-bounds/ac.json?v=1",
+      "status": 200
+    }
+  ],
+  "errors": []
+}

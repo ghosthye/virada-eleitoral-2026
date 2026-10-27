@@ -104,3 +104,9 @@ Fontes metodológicas: [Imai, Lu e Strauss, método de limites](https://imai.fas
 Contexto consultado: [CNN, 20/10/2026](https://www.cnnbrasil.com.br/eleicoes/analise-a-aritmetica-da-ausencia/) e [Quaest, 22/10/2026](https://quaest.com.br/segundo-turno-2026-votos-brancos-nulos/). São análises anteriores ao resultado, não medições de transferências efetivas. As intenções divulgadas não foram impostas às urnas ou a municípios.
 
 Exemplos públicos de navegação e testes usam São Paulo-SP e Recife-PE. O cadastro oficial permanece completo, sem associar qualquer município à localização do mantenedor.
+
+## Diagrama Sankey dos saldos oficiais
+
+A visualização principal de #migracao mostra uma identidade contábil, com um nó intermediário de balanço: votos válidos dos candidatos eliminados + variação do comparecimento + redução de brancos + redução de nulos = ganhos líquidos de Lula e Flávio. Os cinco grupos de eliminados permanecem separados. Nenhuma faixa conecta uma candidatura eliminada ou um grupo de inválidos diretamente a um finalista. A conta usa o comparecimento oficial e não incorpora a base populacional sintética dos limites.
+
+Em recortes com parcelas negativas, o módulo move essas parcelas para o outro lado da igualdade, sem desenhar espessuras negativas. Assim, uma queda de candidato pode aparecer à esquerda e uma queda de comparecimento, à direita. O balanço pode exceder o crescimento líquido; ambos são identificados. Toque e teclado mostram a explicação de cada parcela. A implementação está em docs/balance-sankey.js. Os limites individuais, inclusive os de 0% a 100%, ficam numa explicação técnica recolhida. Eles não são uma estimativa de migração.

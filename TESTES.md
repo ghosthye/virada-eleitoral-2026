@@ -22,3 +22,11 @@ Não foi testado em iPhone físico ou Safari/WebKit. Emulação de largura não 
 ## Reprodução
 
 Execute node scripts/build-flow-bounds.mjs e npm test. As entradas e hashes estão em docs/data/migration/; os limites atuais em docs/data/flow-bounds/. As referências estatísticas e as análises de CNN e Quaest consultadas estão no README e na seção de fontes do site, com datas e limitações.
+
+## Sankey contábil · revisão de 27/10/2026
+
+O fluxo verificado foi seleção de Brasil/UF/município → arquivos estáticos do retrato TSE → identidade de saldos → SVG interativo. Não há nova API nem nova credencial nesse percurso.
+
+Nove testes direcionados passaram (balance-sankey e territory-math): conferem a identidade em todos os 5.571 municípios publicados e estados, os valores nacionais, casos de queda local, parcelas negativas, ausência de mudança e rejeição de totais inconsistentes. O diagrama não usa o ajuste cadastral sintético das faixas.
+
+Dezessete verificações em Chrome real passaram: gráfico nacional, toque e teclado, Pernambuco, Recife, saldo negativo de Acrelândia, limites técnicos recolhidos, rede HTTP 200, ausência de exceções e de transbordamento em 320, 390, 430 e 1.440 pixels. Relatório: tests/balance-sankey-review-2026-10-27.json. As capturas de celular e computador foram inspecionadas. Mobile foi emulado; não houve teste em iPhone físico nem em Safari nesta revisão.
