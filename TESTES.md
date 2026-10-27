@@ -47,3 +47,31 @@ Não houve teste em iPhone físico, Safari/WebKit ou navegador interno do Instag
 ## Compatibilidade com a hospedagem do espelho
 
 A checagem do endereço do espelho encontrou respostas 500 nas rotas de dados. Os logs de produção identificaram a causa: o ambiente não permite acessar o cache padrão. Essa dependência foi removida das rotas de dados e da API. Os dados estáticos continuam com cache HTTP no navegador e CDN de origem, e a API mantém cache em memória e deduplicação. Foi adicionado um teste de regressão que simula a indisponibilidade do cache da hospedagem e confirma tanto JSON quanto BU, além de um teste que recusa encaminhar URLs arbitrárias.
+
+## Atualização do kit editorial e da decomposição territorial (26/10/2026)
+
+- `npm test`: 20 testes passaram. Foram acrescentadas cinco verificações para a identidade contábil municipal, o caso de Palmares, componentes negativos, inversão de margem e totais incoerentes.
+- `node --check docs/app.js`: passou.
+- Prévia local em Chromium integrado, viewport reportado de 618 × 764: a aplicação carregou como módulo, respondeu à seleção de cidade e mostrou Palmares com valores do conjunto TSE. A conta detalhada fechou: demais candidatos +1.484; comparecimento +1.330; redução de brancos/nulos +580; crescimento conjunto +3.394; Lula +2.957; Flávio +437; mudança da margem +2.520.
+- O mapa interativo foi preparado e o documento não excedeu a largura da viewport (documento 603 px; viewport 618 px). Isso não substitui testes em aparelhos físicos, Safari/iPhone ou telas desktop largas.
+- A nova cronologia e o FAQ foram incluídos com as fontes indicadas junto às afirmações. Não foi feita uma nova auditoria externa de cada página durante esta verificação local.
+- Não foi publicado nem enviado ao repositório remoto nesta atualização; o trabalho está na branch `codex/kit-update-2026`.
+
+## Restauração do card original e mapa (27/10/2026)
+
+- Restaurada a arte enviada pelo usuário, com proporções preservadas, domínio avirada.pages.dev e uma faixa para o adesivo de link entre o mapa e os dados de crescimento. O mapa ilustrativo da arte é substituído pelo resultado municipal do segundo turno antes da montagem do PNG 1080 × 1920.
+- Geração e prévia do card conferidas visualmente no Chromium integrado; mapa oficial, domínio e espaço para o adesivo apareceram na prévia.
+- O mapa interativo passou a usar até 3 pixels por pixel CSS em telas compatíveis, limitado a 2,2 milhões de pixels. O redesenho imediato dos botões de zoom mantém o cache durante gestos.
+- Seleção real no navegador: com filtro PE, o clique num município vizinho selecionou Ouro Branco-RN e atualizou o filtro para RN; o rótulo e os dados corresponderam à cidade. O botão de zoom foi exercitado.
+- npm test: 20/20 passaram; node --check docs/app.js e git diff --check passaram. Não houve teste em iPhone físico nem medição de fluidez em aparelho real.
+
+## Revisão editorial e funcional para publicação (27/10/2026)
+
+- Conteúdo revisado como perguntas factuais, sem pressupor preferência partidária: 10 milhões versus votos nas candidaturas eliminadas; limites da inferência de migração individual; mudanças de liderança nas parciais; votos após 17h e fila; prorrogação; mapa por área versus soma de votos; BU; escopo do TCU em 2022; pesquisas eleitorais.
+- As dez perguntas agora são cartões expansíveis separados. A conta nacional ganhou uma explicação direta sobre por que saldos não rastreiam quem trocou de candidato. A comparação dos registros após 17h com a margem final foi identificada como aritmética, com limite do recorte. A descrição do TCU foi precisada para os votos confrontados nas amostras, incluindo a existência de outros achados no relatório.
+- Fontes primárias consultadas: totalizações nacionais atuais dos dois turnos, nota do TSE sobre pausa e retomada, decisão/notícia do STF, sigilo do voto pelo TRE-SP e relatório/notícia do TCU. Os 27 links externos do HTML responderam HTTP 200; resposta HTTP, isoladamente, não é validação do conteúdo. As fontes jornalísticas permanecem atribuídas e as contagens de recortes diferentes não são misturadas.
+- 20/20 testes Node passaram, com reconciliação municipal, matemática, BUs e API.
+- 16/16 verificações adicionais passaram em Brave/Chromium headless, usando perfil independente: viewports 1440×1000, 320×844, 390×844 e 430×932; abertura sem excesso horizontal; legenda sem sobreposição; três passos; conta exata; dez dúvidas; busca município de amostra-PE; Escola local de exemplo e soma completa; município de amostra seção 142/zona 94; Palmares seção 31/zona 37 e conta municipal; mapa/filtro/seleção/modos/zoom; PNG real 1080×1920; erro de consulta simulado com preservação do primeiro turno e nova tentativa; ausência de exceções JavaScript.
+- A primeira execução identificou a sobreposição da legenda no desktop, corrigida antes da execução final. A simulação retornou HTTP 503 de propósito na API da seção; esse erro esperado consta no relatório.
+- API pública do espelho: seção 142/zona 94 de município de amostra retornou HTTP 200, CORS `*`, Lula 212 e Flávio 62. A assinatura criptográfica não é verificada pelo aplicativo.
+- Relatório: `tests/publication-review-2026-10-27.json`. Não houve teste em iPhone físico, Safari/WebKit ou no aplicativo Instagram. A revisão não promete responder a toda alegação possível nem equivale a auditoria forense da eleição.

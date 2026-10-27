@@ -2,7 +2,8 @@
 
 Uma explicação simples da virada presidencial, com resultados oficiais do TSE, mapa municipal e consulta por **cidade → escola/local → seção**. Interface pensada primeiro para celular.
 
-- Site: https://ghosthye.github.io/virada-eleitoral-2026/
+- Site principal: https://avirada.pages.dev/
+- GitHub Pages: https://ghosthye.github.io/virada-eleitoral-2026/
 - Espelho e API dos boletins: https://atlas-eleitoral-2026-luiz.luizluizluii.chatgpt.site/
 
 ## O que a página explica
