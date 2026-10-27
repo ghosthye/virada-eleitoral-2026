@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-27T13:18:31.505Z",
+  "results": [
+    {
+      "name": "A taxa central foi retirada; a tela distingue saldos e possibilidades",
+      "pass": true
+    },
+    {
+      "name": "A conta oficial nacional fecha e preserva os dois candidatos",
+      "pass": true
+    },
+    {
+      "name": "Brancos/nulos para Flávio exibe limites amplos em vez de uma taxa central",
+      "pass": true
+    },
+    {
+      "name": "Abstenção fica separada e os grupos candidatos continuam disponíveis",
+      "pass": true
+    },
+    {
+      "name": "Trocar destino atualiza as faixas sem gerar distribuição de 100%",
+      "pass": true
+    },
+    {
+      "name": "Busca de Recife pelo teclado abre limites municipais e valores oficiais",
+      "pass": true
+    },
+    {
+      "name": "Busca de São Paulo e troca estadual mantêm os recortes separados",
+      "pass": true
+    },
+    {
+      "name": "Erro HTTP no recorte local mantém o dado anterior e permite tentar novamente",
+      "pass": true
+    },
+    {
+      "name": "Fontes distinguem pesquisa anterior, limites e resultados das urnas",
+      "pass": true
+    },
+    {
+      "name": "Página sem transbordamento em 320px",
+      "pass": true
+    },
+    {
+      "name": "Página sem transbordamento em 390px",
+      "pass": true
+    },
+    {
+      "name": "Página sem transbordamento em 430px",
+      "pass": true
+    },
+    {
+      "name": "Página sem transbordamento em 1440px",
+      "pass": true
+    },
+    {
+      "name": "Mapa oficial continua carregando e alternando modos",
+      "pass": true
+    },
+    {
+      "name": "Os quatro cards de compartilhamento continuam disponíveis",
+      "pass": true
+    },
+    {
+      "name": "Sem exceções JavaScript",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "httpErrors": [
+    {
+      "url": "http://localhost:8787/data/flow-bounds/ba.json?v=1",
+      "status": 503
+    }
+  ],
+  "note": "Chromium real; larguras mobile emuladas. Sem iPhone físico. Limites matemáticos condicionais, sem estimativa central de transferência."
+}

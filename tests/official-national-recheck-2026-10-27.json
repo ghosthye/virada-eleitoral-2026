@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-10-27T13:18:43.777Z",
+  "checks": [
+    {
+      "turn": 1,
+      "url": "https://resultados.tse.jus.br/oficial/ele2026/6257/dados/br/br-c0001-e006257-u.json",
+      "httpStatus": 200,
+      "officialDate": "05/10/2026",
+      "officialTime": "12:51:47",
+      "countsMatch": true
+    },
+    {
+      "turn": 2,
+      "url": "https://resultados.tse.jus.br/oficial/ele2026/6258/dados/br/br-c0001-e006258-u.json",
+      "httpStatus": 200,
+      "officialDate": "25/10/2026",
+      "officialTime": "23:27:02",
+      "countsMatch": true
+    }
+  ]
+}

@@ -1,23 +1,24 @@
-# Verificação do projeto — 27/10/2026
+# Verificação do projeto — revisão de 27/10/2026
 
-## Dados e estimativa própria
+## Correção metodológica
 
-A estimativa utiliza 5.757 unidades territoriais (municípios e locais no exterior), com 11.514 arquivos oficiais EA20 identificados por URL e SHA-256. Todos os totais de origem e destino são preservados. A base contábil por unidade usa o maior eleitorado dos dois turnos; o ajuste não acrescenta votos aos candidatos.
+A interface retirou as taxas centrais do experimento de regressão ecológica anterior. Seus testes verificavam somas, implementação e funcionamento, não validavam transferências reais. O experimento e seus diagnósticos permanecem arquivados para examinar a correção, com STATUS.md explícito. A interface não os carrega.
 
-O modelo usa regressão ecológica com restrições por região, calibração às margens municipais, 200 reamostragens estratificadas por UF e seis especificações alternativas. As faixas são envelopes de sensibilidade, não intervalos de confiança validados. O fechamento das somas e os testes sintéticos não comprovam transferências individuais.
+A análise atual apresenta saldos oficiais e limites condicionais de tabelas de contingência. Mínimo = máx(0, X + Y − N), máximo = mín(X,Y), por unidade. Limites estaduais e nacionais são somas de limites locais. A base comum e o ajuste cadastral são hipóteses contábeis, não prova de população individual idêntica. Limites não são probabilidades nem intervalos de confiança. Os extremos são atingíveis separadamente e não precisam ocorrer juntos.
 
-Seis testes específicos verificam fontes, matrizes, agregações, totais nacionais, diagnósticos e interface. Três testes Python verificam recuperação de parâmetros em dados sintéticos, calibração/arredondamento e envelopes de sensibilidade.
+## Testes numéricos e fontes
 
-## Funcionalidades preservadas
-
-Vinte testes cobrem API, boletins reais, rejeição de entradas inválidas, resultados territoriais, hospedagem e matemática das diferenças entre turnos. Os exemplos usam São Paulo-SP e Recife-PE. Boletins oficiais de Recife, São Paulo, Acre e exterior verificam variantes do formato. Não verificamos assinaturas criptográficas; estes testes não constituem auditoria eleitoral.
+- Seis novos testes conferem os limites contra enumeração exaustiva de todas as tabelas pequenas 2x3 e 3x3, recomputam os 5.757 recortes publicados, verificam agregações, saldos negativos, ajustes locais e rejeição de bases inválidas.
+- Uma contraprova constrói dois fluxos com diferença de um milhão em brancos/nulos para Flávio, preservando exatamente cada margem em cada unidade. Isso demonstra não identificação; não estima o fluxo verdadeiro.
+- As 11.514 fontes oficiais EA20 continuam identificadas por URL e hash. Nova consulta direta aos dois arquivos nacionais, registrada em tests/official-national-recheck-2026-10-27.json, coincidiu com candidatos, válidos, brancos/nulos, comparecimento, aptos e ausentes publicados.
+- Os 39 testes da suíte completa passaram. Ela inclui os testes de API, BUs reais, reconciliação territorial, matemática dos saldos e os testes históricos do experimento retirado. Passar nesses testes não valida comportamento individual nem audita assinaturas criptográficas das urnas.
 
 ## Navegador
 
-Dezoito verificações passaram em Chromium real, com larguras de 320, 390, 430 e 1.440 pixels: carregamento do modelo, grupos e detalhes, clique real e teclado no Sankey, buscas de Recife e São Paulo, troca de UF, ampliação, ausência de transbordamento da página, mapas e cards, fontes e recuperação após erro HTTP 503 simulado. A falha não substitui resultados por zero. Relatório em `tests/own-migration-review-2026-10-27.json`.
+Dezesseis verificações passaram em Chromium real, em 320, 390, 430 e 1.440 pixels: retirada da taxa central, saldos nacionais, grupos separados, mudança de destino, Recife por teclado, São Paulo e UF, falha HTTP 503 sem zerar resultados e recuperação, fontes, ausência de transbordamento, mapa e troca de turnos, quatro cards e ausência de exceções JavaScript. Relatório: tests/flow-bounds-review-2026-10-27.json. Capturas mobile foram inspecionadas visualmente.
 
-Não foi realizado teste em iPhone físico ou Safari/WebKit. A emulação de largura mobile não substitui esses testes.
+Não foi testado em iPhone físico ou Safari/WebKit. Emulação de largura não substitui esses testes. Os relatórios anteriores documentam versões anteriores, não a validação das transferências.
 
 ## Reprodução
 
-Execute `npm test`. Para os testes numéricos, instale `scripts/migration-requirements.txt` e execute `python -m unittest discover -s tests -p test_migration_fit.py -v`. A reconstrução dos dados requer os arquivos oficiais originais; consulte o README e os manifestos em `docs/data/migration/`.
+Execute node scripts/build-flow-bounds.mjs e npm test. As entradas e hashes estão em docs/data/migration/; os limites atuais em docs/data/flow-bounds/. As referências estatísticas e as análises de CNN e Quaest consultadas estão no README e na seção de fontes do site, com datas e limitações.

@@ -19,7 +19,7 @@ Flávio começou com **2.224.965 votos de vantagem**. Entre os turnos, Lula cres
 =10.376.694  crescimento de Lula
 ```
 
-A identidade compara **saldos agregados**. Não identifica transferências individuais nem demonstra, sozinha, causas políticas da vitória. O modelo próprio de migração estima padrões agregados, com hipóteses e sensibilidade. Não identifica o voto de pessoas, alunos ou funcionários de escolas.
+A identidade compara **saldos agregados**. Não identifica transferências individuais nem demonstra, sozinha, causas políticas da vitória. A seção revisada publica limites matemáticos, sem estimativa central de transferência. Não identifica o voto de pessoas, alunos ou funcionários de escolas.
 
 ## Consulta por escola e seção
 
@@ -86,22 +86,21 @@ Sem cadastro, título eleitoral, CPF, geolocalização ou bibliotecas de rastrea
 
 Código deste projeto: licença MIT. Dados eleitorais: TSE, com atribuição conforme o portal. Geografia: IBGE, com atribuição. Este projeto não é um site oficial da Justiça Eleitoral.
 
-## Estimativa própria de migração
+## Análise de migração revisada em 27/10/2026
 
-O Sankey usa uma regressão ecológica restrita própria, separada dos resultados oficiais. São 5.571 municípios e 186 recortes no exterior. As taxas são ajustadas por macrorregião, com regularização escolhida por validação em três partes; uma calibração às margens preserva as bases oficiais locais. A análise inclui 200 reamostragens estratificadas por UF e seis especificações de sensibilidade. O envelope exibido **não é um intervalo de confiança com cobertura validada** e não elimina viés ecológico.
+As taxas centrais do modelo anterior foram retiradas da interface: as somas fechavam, mas as transferências não foram validadas. Não trocamos os percentuais por valores escolhidos para parecerem mais plausíveis. O modelo antigo e seus diagnósticos ficam arquivados em docs/data/migration/ para permitir examinar a correção; não são usados pela interface atual.
 
-Lula, Flávio, Cury, Caiado, Renan e Zema são separados. Outros candidatos, brancos/nulos, abstenção e ajustes cadastrais têm categorias próprias. A projeção de uma cidade usa o modelo regional, sem alegar ajuste independente para seus moradores. A mesma escala é usada em todo o Sankey.
+A comparação publica os saldos oficiais e limites de tabelas de contingência (Duncan–Davis): para cada célula, máximo(0, X + Y − N) e mínimo(X,Y). Calculamos por unidade e somamos os limites por UF e Brasil. Esses extremos são atingíveis separadamente sob a hipótese de população local comum e equivalente, equilibrada com ajuste cadastral. Não são intervalos de confiança, probabilidades ou faixas prováveis. Extremos diferentes não precisam ser compatíveis simultaneamente.
 
-As entradas, hashes, modelo, diagnósticos e arquivos por UF ficam em docs/data/migration/. O modelo é carregado somente quando a seção se aproxima da tela; os recortes locais são carregados por UF. O site não depende de gráficos ou taxas de terceiros.
-
-Para reproduzir a partir das entradas publicadas:
+A base inclui 5.571 municípios e 186 recortes no exterior. Lula, Flávio, Cury, Caiado, Renan, Zema e outros candidatos têm grupos separados. Ausência e brancos/nulos são separados. Fórmulas: docs/migration-bounds.js; entradas e hashes oficiais: docs/data/migration/inputs.json e sources.json; saídas: docs/data/flow-bounds/. Reconstrua com:
 
 ```sh
-python -m pip install -r scripts/migration-requirements.txt
-python scripts/fit-migration.py --input docs/data/migration/inputs.json --output docs/data/migration --replicates 200
-python -m unittest discover -s tests -p test_migration_fit.py
+node scripts/build-flow-bounds.mjs
+npm test
 ```
 
-Se tiver cópias dos EA20 das URLs e nomes do manifesto, as entradas também podem ser reconstruídas com node scripts/build-migration-inputs.mjs CAMINHO_DOS_EA20 docs/data/migration. Não há validação de trajetórias individuais ou auditoria de integridade de urnas.
+Fontes metodológicas: [Imai, Lu e Strauss, método de limites](https://imai.fas.harvard.edu/software/files/eco.pdf), [Forcina e Pellegrino, viés ecológico em transições](https://arxiv.org/abs/1411.4411), [Jiang e colaboradores, identificação parcial](https://arxiv.org/abs/1804.05803).
 
-Exemplos públicos de navegação e de testes usam São Paulo-SP e Recife-PE. O cadastro eleitoral continua completo para todos os municípios; nenhum deles é associado à localização de quem mantém o projeto.
+Contexto consultado: [CNN, 20/10/2026](https://www.cnnbrasil.com.br/eleicoes/analise-a-aritmetica-da-ausencia/) e [Quaest, 22/10/2026](https://quaest.com.br/segundo-turno-2026-votos-brancos-nulos/). São análises anteriores ao resultado, não medições de transferências efetivas. As intenções divulgadas não foram impostas às urnas ou a municípios.
+
+Exemplos públicos de navegação e testes usam São Paulo-SP e Recife-PE. O cadastro oficial permanece completo, sem associar qualquer município à localização do mantenedor.

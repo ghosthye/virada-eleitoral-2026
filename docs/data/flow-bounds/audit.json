@@ -1,0 +1,64 @@
+{
+  "units": 5757,
+  "allMarginsExact": true,
+  "bnOrigin": 5975047,
+  "bnToFlavio": 3630,
+  "bnToFlavioPercent": 0.06075266018827969,
+  "publishedSensitivity": [
+    1981,
+    383804
+  ],
+  "mathematicalBoundsGivenEveryLocalMargin": [
+    0,
+    5975046
+  ],
+  "alternativeWithSameEveryLocalMargin": {
+    "bnToFlavio": 1003630,
+    "bnToFlavioPercent": 16.797022684507752,
+    "netCandidateTotalsUnchanged": true
+  },
+  "regions": [
+    {
+      "region": "Centro-Oeste",
+      "fittedBnToFlavioRate": 1.456108317414449e-17
+    },
+    {
+      "region": "Exterior",
+      "fittedBnToFlavioRate": 0.31776216722273365
+    },
+    {
+      "region": "Nordeste",
+      "fittedBnToFlavioRate": 1.0241562583531517e-17
+    },
+    {
+      "region": "Norte",
+      "fittedBnToFlavioRate": 1.651785114230952e-17
+    },
+    {
+      "region": "Sudeste",
+      "fittedBnToFlavioRate": 0.0
+    },
+    {
+      "region": "Sul",
+      "fittedBnToFlavioRate": 0.0
+    }
+  ],
+  "floorSensitivity": {
+    "1e-08": {
+      "bnToFlavio": 3386,
+      "bnToFlavioPercent": 0.056671296252945404
+    },
+    "1e-06": {
+      "bnToFlavio": 3395,
+      "bnToFlavioPercent": 0.05681186060131891
+    },
+    "0.0001": {
+      "bnToFlavio": 4146,
+      "bnToFlavioPercent": 0.06939299035132658
+    },
+    "0.001": {
+      "bnToFlavio": 10490,
+      "bnToFlavioPercent": 0.1755589329887624
+    }
+  }
+}

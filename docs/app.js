@@ -1,4 +1,4 @@
-import { initMigration } from './migration-ui.js?v=3';
+import { initMigration } from './migration-ui.js?v=4';
 import { STORY_CARDS, drawStoryHook } from './story-cards.js';
 import { territoryBreakdown } from './territory-math.js';
 'use strict';
