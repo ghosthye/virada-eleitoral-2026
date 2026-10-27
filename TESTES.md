@@ -10,7 +10,7 @@ A análise atual apresenta saldos oficiais e limites condicionais de tabelas de 
 
 - Seis novos testes conferem os limites contra enumeração exaustiva de todas as tabelas pequenas 2x3 e 3x3, recomputam os 5.757 recortes publicados, verificam agregações, saldos negativos, ajustes locais e rejeição de bases inválidas.
 - Uma contraprova constrói dois fluxos com diferença de um milhão em brancos/nulos para Flávio, preservando exatamente cada margem em cada unidade. Isso demonstra não identificação; não estima o fluxo verdadeiro.
-- As 11.514 fontes oficiais EA20 continuam identificadas por URL e hash. Nova consulta direta aos dois arquivos nacionais, registrada em tests/official-national-recheck-2026-10-27.json, coincidiu com candidatos, válidos, brancos/nulos, comparecimento, aptos e ausentes publicados.
+- O manifesto local contém 11.514 arquivos oficiais EA20 identificados por URL e hash (5.757 recortes × 2 turnos). A auditoria de totalização inclui mais 58 agregados (27 UFs, Exterior e Brasil × 2 turnos), totalizando 11.572. Nova consulta direta aos dois arquivos nacionais, registrada em tests/official-national-recheck-2026-10-27.json, coincidiu com candidatos, válidos, brancos/nulos, comparecimento, aptos e ausentes publicados.
 - Os 39 testes da suíte completa passaram. Ela inclui os testes de API, BUs reais, reconciliação territorial, matemática dos saldos e os testes históricos do experimento retirado. Passar nesses testes não valida comportamento individual nem audita assinaturas criptográficas das urnas.
 
 ## Navegador
