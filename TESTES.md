@@ -75,3 +75,7 @@ A checagem do endereço do espelho encontrou respostas 500 nas rotas de dados. O
 - A primeira execução identificou a sobreposição da legenda no desktop, corrigida antes da execução final. A simulação retornou HTTP 503 de propósito na API da seção; esse erro esperado consta no relatório.
 - API pública do espelho: seção 142/zona 94 de município de amostra retornou HTTP 200, CORS `*`, Lula 212 e Flávio 62. A assinatura criptográfica não é verificada pelo aplicativo.
 - Relatório: `tests/publication-review-2026-10-27.json`. Não houve teste em iPhone físico, Safari/WebKit ou no aplicativo Instagram. A revisão não promete responder a toda alegação possível nem equivale a auditoria forense da eleição.
+
+### Confirmação após publicar
+
+A versão de código `281653ec506e31f566018d6dd41e1098abfc5670` foi enviada à branch `main` após a autorização do usuário. Cloudflare Pages (avirada.pages.dev) e GitHub Pages responderam HTTP 200 com o HTML novo, incluindo módulo app.js v21 e as perguntas da revisão. As mesmas 16 verificações de navegador passaram contra https://avirada.pages.dev/, incluindo a API real de boletins e o retry após uma resposta 503 simulada com CORS. O relatório JSON inclui os resultados de produção. Não há promessa de disponibilidade futura das fontes externas.
