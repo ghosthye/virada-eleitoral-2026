@@ -1,3 +1,4 @@
+import { initFlowExplorer } from './flow-explorer.js';
 import { STORY_CARDS, drawStoryHook } from './story-cards.js';
 import { territoryBreakdown } from './territory-math.js';
 'use strict';
@@ -127,3 +128,5 @@ if('IntersectionObserver'in window){const observer=new IntersectionObserver(entr
 
 if('IntersectionObserver'in window){const mapObserver=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){mapObserver.disconnect();loadMap().catch(()=>{});}},{rootMargin:'150px'});mapObserver.observe($('mapa'));const navObserver=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting)document.querySelectorAll('.bottom-nav a').forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id));},{rootMargin:'-10% 0px -65% 0px'});for(const id of ['entenda','meu-voto','mapa','fontes'])navObserver.observe($(id));}
 const initialQuery=new URLSearchParams(location.search);ensureData().then(async()=>{const id=initialQuery.get('cidade');if(!id)return;const m=D.municipalities.find(m=>m.id===id);if(!m)return;await chooseCity(m);const z=+initialQuery.get('zona'),s=+initialQuery.get('secao');if(z&&s&&cityData){const sec=cityData.sections.find(r=>r[0]===z&&r[1]===s);if(sec)chooseSchool({type:'section',section:sec});}else if(initialQuery.has('local')&&cityData){const[z,n]=initialQuery.get('local').split('-').map(Number),i=cityData.locals.findIndex(l=>l.z===z&&l.n===n);if(i>=0)chooseSchool({type:'local',index:i});}$('meu-voto').scrollIntoView({behavior:'smooth'});}).catch(()=>{});
+
+initFlowExplorer({getData:ensureData});

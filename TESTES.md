@@ -94,3 +94,15 @@ Quatro modelos em PNG 1080×1920: nacional (arte original preservada), seção, 
 Auditoria em Chromium real: 19 verificações passaram, incluindo tamanho dos quatro PNGs, arquivo correto ao selecionar/compartilhar, setas, rolagem, teclado, links por tema, ausência de download automático e de transbordamento em 320, 390, 430 e 1440 px. PNGs e capturas inspecionados visualmente. Relatório: `tests/story-carousel-review-2026-10-27.json`.
 
 O envio nativo e a área de transferência foram simulados para verificar os arquivos e argumentos. Não foram testados Instagram/WhatsApp reais nem iPhone físico. O adesivo de link continua sendo adicionado pelo usuário no Instagram.
+
+## Cenários entre turnos — 27/10/2026
+
+Implementação original de diagrama Sankey no visual do A Virada. Não foram copiados código, textos, recursos gráficos ou estimativas do site de referência. As ligações são cenários de transporte, não uma estimativa de migração, pesquisa de opinião ou inferência ecológica.
+
+O usuário escolhe uma ligação e um valor inteiro dentro dos limites matemáticos. Um problema de transporte de custo mínimo fecha as outras ligações, priorizando manter categorias. O exemplo inicial fixa “Demais candidatos → Lula” no meio dos seus limites; isso é uma convenção didática, não maior probabilidade. O método e suas limitações aparecem na interface. Uma diferença no eleitorado gera nó explícito de ajuste. O saldo não classificado é explicado, sem atribuição a abstenção.
+
+Validação automática: 26 testes do projeto passaram, dos quais seis verificam os cenários. Brasil, todas as UFs e todos os 5.571 registros municipais foram reconciliados com os totais publicados, nos cenários inicial, mínimo, intermediário e máximo da ligação de demais candidatos para Lula. Tabelas sintéticas exercitaram todos os pares e seus extremos, além de casos inviáveis e eleitorados diferentes.
+
+No Chromium real, passaram 18 verificações: abertura sob demanda, mudança de hipótese, faixas por clique/teclado, clique real por ponteiro, PE, município de amostra-PE, troca de recortes, intervalo e valor intermediário, tabela/método, recomeço e preservação de estado. Sem transbordamento horizontal em 320, 390, 430 e 1440 px. Capturas de Brasil, Pernambuco e município de amostra inspecionadas. Não houve teste em iPhone físico. Relatório: `tests/flow-scenarios-review-2026-10-27.json`.
+
+Fontes metodológicas consultadas: TSE, “Votação segura” (RDV e sigilo); Jiang, King, Schmaltz e Tanner (2019), “Ecological Regression with Partial Identification”. O estimador do artigo não foi implementado. A fórmula de limites nesta versão é a restrição de margens de uma tabela de transporte, sem probabilidades ou intervalos de confiança.

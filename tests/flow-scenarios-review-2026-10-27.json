@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-27T11:09:51.993Z",
+  "results": [
+    {
+      "name": "Gráfico não renderiza nem carrega biblioteca externa antes de abrir",
+      "pass": true
+    },
+    {
+      "name": "Brasil: cenário identificado e limites de demais candidatos para Lula",
+      "pass": true
+    },
+    {
+      "name": "Extremos da hipótese produzem cenários diferentes com mesmos totais",
+      "pass": true
+    },
+    {
+      "name": "Faixa tocada seleciona origem e destino correspondentes",
+      "pass": true
+    },
+    {
+      "name": "Faixa pode ser escolhida por teclado",
+      "pass": true
+    },
+    {
+      "name": "Clique real no SVG seleciona uma faixa",
+      "pass": true
+    },
+    {
+      "name": "Estado PE usa totais próprios e explica ajuste de base",
+      "pass": true
+    },
+    {
+      "name": "Busca município de amostra PE e confirma por Enter",
+      "pass": true
+    },
+    {
+      "name": "Troca rápida entre recortes mantém totais e interface coerentes",
+      "pass": true
+    },
+    {
+      "name": "Controle deslizante aceita hipótese intermediária inteira",
+      "pass": true
+    },
+    {
+      "name": "Tabela e método visíveis sem tratar limites como probabilidades",
+      "pass": true
+    },
+    {
+      "name": "Página sem transbordamento horizontal em 320px",
+      "pass": true
+    },
+    {
+      "name": "Página sem transbordamento horizontal em 390px",
+      "pass": true
+    },
+    {
+      "name": "Página sem transbordamento horizontal em 430px",
+      "pass": true
+    },
+    {
+      "name": "Página sem transbordamento horizontal em 1440px",
+      "pass": true
+    },
+    {
+      "name": "Recomeçar recupera a convenção inicial e a ligação padrão",
+      "pass": true
+    },
+    {
+      "name": "Método pode ser fechado e gráfico reaberto sem perder hipótese",
+      "pass": true
+    },
+    {
+      "name": "Sem exceções JavaScript",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "httpErrors": [],
+  "note": "Chromium real, larguras mobile emuladas. Sem iPhone físico. Cenários de transporte, sem inferência de voto individual."
+}
