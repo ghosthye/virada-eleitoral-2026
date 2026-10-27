@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "kind": "external-estimate-summary",
+  "scope": "Brasil, recorte da análise do autor",
+  "author": "Figuretti (@elfiguretti)",
+  "publishedAt": "2026-10-27T03:34:08.000Z",
+  "checkedAt": "2026-10-27",
+  "source": "https://x.com/elfiguretti/status/2114923574796378299",
+  "image": "https://pbs.twimg.com/media/HVm2wXtXIAAxWCQ.jpg",
+  "methodImage": "https://pbs.twimg.com/media/HVm3SrcWMAAvGSm.jpg",
+  "coverageReportedPercent": 99.6,
+  "coverageIndependentlyVerified": false,
+  "fullMatrixAvailable": false,
+  "localEstimatesAvailable": false,
+  "groups": [
+    {"id": "cury", "label": "Augusto Cury", "lula": 53, "flavio": 26},
+    {"id": "caiado", "label": "Ronaldo Caiado", "lula": 36, "flavio": 52},
+    {"id": "santos", "label": "Renan Santos", "lula": 42, "flavio": 38},
+    {"id": "invalidos", "label": "Brancos e nulos", "lula": 62, "flavio": null},
+    {"id": "abstencao", "label": "Quem não votou no 1º turno", "lula": 8, "flavio": 1}
+  ],
+  "interpretation": "Percentuais arredondados transcritos do texto do post, dentro de cada grupo de origem. O complemento das parcelas conhecidas não discrimina destinos. Não são percentuais oficiais, intervalos de confiança ou estimativas municipais."
+}

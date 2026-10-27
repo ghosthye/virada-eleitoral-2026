@@ -114,3 +114,13 @@ O gráfico agora separa brancos/nulos de abstenção. Eventual saldo não classi
 A busca pública pelos textos e valores da imagem de referência não confirmou a publicação original nem sua autoria. A interface registra essa limitação, em vez de atribuí-la ao TSE ou a um instituto. A referência técnica para o tipo de visualização é a documentação oficial D3 Sankey, https://github.com/d3/d3-sankey; não usamos código ou dependências dessa biblioteca. A seção Fontes contém composição das categorias, regras de transporte, limites de cada ligação, ajuste de base, critério inicial e distinção entre totais oficiais e cenários.
 
 Passaram 27 testes do projeto, incluindo a separação das categorias para Brasil, UFs e todos os municípios. Na versão final, passaram 20 verificações em Chromium real, com clique por ponteiro, teclado, valores e pesquisa de recortes. Capturas inspecionadas em 320, 390, 430 e 1440 px. Sem teste em iPhone físico. Relatório: `tests/flow-categories-review-2026-10-27.json`.
+
+## Análise externa nacional — 27/10/2026
+
+A seção pública do simulador foi substituída por “De onde vieram os votos? Uma estimativa”. O gráfico original de Figuretti (@elfiguretti) é carregado do servidor de imagens do X, sem widget ou script de terceiros. A autoria, o link original, a natureza estimada e a escala reduzida da abstenção (1:4) aparecem junto à imagem. As notas metodológicas foram resumidas com atribuição e sem alegar reprodução ou auditoria do modelo.
+
+Cinco barras em português resumem os percentuais arredondados do texto do post. O restante não detalhado é hachurado; percentual não informado de Flávio fica como não informado. Não multiplicamos essas taxas por totais oficiais, não reconstruímos matriz incompleta e não apresentamos estimativas locais. Procedência e números: `docs/data/migration-estimate.json`. Se a imagem externa falhar, ficam o resumo e o link original.
+
+Passaram 20 testes relevantes da versão ativa (API, BUs, dados, hospedagem e decomposição territorial) e 19 verificações em Chromium real: fonte, imagem real, ressalvas, cinco grupos, dados não informados, teclado, consulta de município de amostra, quatro cards de compartilhamento e telas de 320, 390, 430 e 1440 px. Falha da imagem externa foi simulada com resposta 503 e teve alternativa correta. Não houve teste em iPhone físico. Relatório: `tests/migration-analysis-review-2026-10-27.json`.
+
+Os arquivos do antigo simulador não são mais importados pela página. Havia uma alteração local pré-existente em `docs/flow-math.js`; ela foi preservada e não integra esta publicação. Os testes desse módulo legado não foram incluídos na seleção de testes da versão ativa. Os dados, mapas e funções oficiais do painel não foram alterados.

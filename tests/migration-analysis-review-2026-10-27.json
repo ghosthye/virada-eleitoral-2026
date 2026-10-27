@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-27T12:03:53.628Z",
+  "results": [
+    {
+      "name": "Simulador saiu da página e o ponto antigo continua acessível",
+      "pass": true
+    },
+    {
+      "name": "Fonte, autoria e distinção da apuração oficial ficam visíveis",
+      "pass": true
+    },
+    {
+      "name": "Gráfico original carrega sem script do X",
+      "pass": true
+    },
+    {
+      "name": "Escala da abstenção e denominador recebem aviso ao lado da imagem",
+      "pass": true
+    },
+    {
+      "name": "Cinco grupos resumem percentuais do post com destinos não detalhados",
+      "pass": true
+    },
+    {
+      "name": "Brancos/nulos não inventa percentual de Flávio",
+      "pass": true
+    },
+    {
+      "name": "Grupos se expandem por teclado",
+      "pass": true
+    },
+    {
+      "name": "Limites distinguem 8% do grupo de 8% dos votos e alertam sobre Zema",
+      "pass": true
+    },
+    {
+      "name": "Método externo não é apresentado como validado pelo A Virada",
+      "pass": true
+    },
+    {
+      "name": "Dados de procedência têm escopo nacional e sem intervalos fabricados",
+      "pass": true
+    },
+    {
+      "name": "Busca de município de amostra mantém resultados oficiais locais",
+      "pass": true
+    },
+    {
+      "name": "Carrossel de compartilhamento continua carregando quatro imagens",
+      "pass": true
+    },
+    {
+      "name": "Sem transbordamento da página em 320px",
+      "pass": true
+    },
+    {
+      "name": "Sem transbordamento da página em 390px",
+      "pass": true
+    },
+    {
+      "name": "Sem transbordamento da página em 430px",
+      "pass": true
+    },
+    {
+      "name": "Sem transbordamento da página em 1440px",
+      "pass": true
+    },
+    {
+      "name": "Menu identifica a análise como parte de Entender",
+      "pass": true
+    },
+    {
+      "name": "Imagem externa indisponível tem alternativa e resumo preservado",
+      "pass": true
+    },
+    {
+      "name": "Sem exceções JavaScript",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "httpErrors": [
+    {
+      "url": "https://pbs.twimg.com/media/HVm2wXtXIAAxWCQ.jpg",
+      "status": 503
+    }
+  ],
+  "note": "Chromium real; larguras mobile emuladas. Falha da imagem externa simulada via 503. Sem teste em iPhone físico. Nenhum modelo estatístico externo foi reproduzido ou validado."
+}
