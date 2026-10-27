@@ -106,3 +106,11 @@ Validação automática: 26 testes do projeto passaram, dos quais seis verificam
 No Chromium real, passaram 18 verificações: abertura sob demanda, mudança de hipótese, faixas por clique/teclado, clique real por ponteiro, PE, município de amostra-PE, troca de recortes, intervalo e valor intermediário, tabela/método, recomeço e preservação de estado. Sem transbordamento horizontal em 320, 390, 430 e 1440 px. Capturas de Brasil, Pernambuco e município de amostra inspecionadas. Não houve teste em iPhone físico. Relatório: `tests/flow-scenarios-review-2026-10-27.json`.
 
 Fontes metodológicas consultadas: TSE, “Votação segura” (RDV e sigilo); Jiang, King, Schmaltz e Tanner (2019), “Ecological Regression with Partial Identification”. O estimador do artigo não foi implementado. A fórmula de limites nesta versão é a restrição de margens de uma tabela de transporte, sem probabilidades ou intervalos de confiança.
+
+## Faixas e categorias separadas — revisão de 27/10/2026
+
+O gráfico agora separa brancos/nulos de abstenção. Eventual saldo não classificado tem nó próprio. Permanência e mudança usam intensidades diferentes; a ligação escolhida recebe quantidade na faixa e detalhe próximo ao gráfico. Os cenários continuam independentes por recorte, sem extrapolação de taxas nacionais para cidades.
+
+A busca pública pelos textos e valores da imagem de referência não confirmou a publicação original nem sua autoria. A interface registra essa limitação, em vez de atribuí-la ao TSE ou a um instituto. A referência técnica para o tipo de visualização é a documentação oficial D3 Sankey, https://github.com/d3/d3-sankey; não usamos código ou dependências dessa biblioteca. A seção Fontes contém composição das categorias, regras de transporte, limites de cada ligação, ajuste de base, critério inicial e distinção entre totais oficiais e cenários.
+
+Passaram 27 testes do projeto, incluindo a separação das categorias para Brasil, UFs e todos os municípios. Na versão final, passaram 20 verificações em Chromium real, com clique por ponteiro, teclado, valores e pesquisa de recortes. Capturas inspecionadas em 320, 390, 430 e 1440 px. Sem teste em iPhone físico. Relatório: `tests/flow-categories-review-2026-10-27.json`.

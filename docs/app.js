@@ -1,4 +1,4 @@
-import { initFlowExplorer } from './flow-explorer.js';
+import { initFlowExplorer } from './flow-explorer.js?v=2';
 import { STORY_CARDS, drawStoryHook } from './story-cards.js';
 import { territoryBreakdown } from './territory-math.js';
 'use strict';

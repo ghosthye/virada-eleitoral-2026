@@ -7,8 +7,9 @@ export function flowMargins(a,b){
     return {other,outside,unclassified};
   };
   const x=groups(a),y=groups(b);if(y.other!==0)throw Error('O segundo turno precisa ter apenas os dois candidatos.');
-  const rows=[{key:'lula',label:'Lula',value:a[0]},{key:'flavio',label:'Flávio',value:a[1]},{key:'outros',label:'Demais candidatos',value:x.other},{key:'fora',label:'Sem voto válido',value:x.outside}];
-  const cols=[{key:'lula',label:'Lula',value:b[0]},{key:'flavio',label:'Flávio',value:b[1]},{key:'fora',label:'Sem voto válido',value:y.outside}];
+  const rows=[{key:'lula',label:'Lula',value:a[0]},{key:'flavio',label:'Flávio',value:a[1]},{key:'outros',label:'Demais candidatos',value:x.other},{key:'invalidos',label:'Brancos e nulos',value:a[3]+a[4]},{key:'abstencao',label:'Abstenção',value:a[7]}];
+  const cols=[{key:'lula',label:'Lula',value:b[0]},{key:'flavio',label:'Flávio',value:b[1]},{key:'invalidos',label:'Brancos e nulos',value:b[3]+b[4]},{key:'abstencao',label:'Abstenção',value:b[7]}];
+  if(x.unclassified||y.unclassified){rows.push({key:'saldo',label:'Saldo não classificado',value:x.unclassified});cols.push({key:'saldo',label:'Saldo não classificado',value:y.unclassified});}
   const adjustment=b[6]-a[6];
   if(adjustment>0)rows.push({key:'base',label:'Ajuste de base',value:adjustment});
   if(adjustment<0)cols.push({key:'base',label:'Ajuste de base',value:-adjustment});
