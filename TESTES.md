@@ -86,3 +86,11 @@ A versão de código `281653ec506e31f566018d6dd41e1098abfc5670` foi enviada à b
 - O envio nativo contém somente o File PNG. O site não promete selecionar Instagram/WhatsApp, abrir Stories/Status nem posicionar um adesivo clicável. Há botão para copiar o endereço e alternativa de seleção manual se o clipboard falhar.
 - 14 verificações passaram: quatro larguras sem excesso horizontal, legenda da abertura, ausência de download automático em navegador sem suporte, payload PNG, ativação por toque real, abertura após preparo com ativação válida, cancelamento, bloqueio, cópia do link/fallback, canShare com erro e ausência de exceções JavaScript. As interfaces nativas de share/canShare/clipboard foram simuladas; o PNG e a prévia foram gerados de fato no navegador. Relatório: `tests/story-share-review-2026-10-27.json`.
 - Os 20 testes Node existentes passaram. Não houve teste físico em iPhone nem abertura real dos aplicativos Instagram e WhatsApp. A integração efetiva com cada aplicativo depende das opções que ele disponibiliza no aparelho.
+
+## Carrossel de compartilhamento — 27/10/2026
+
+Quatro modelos em PNG 1080×1920: nacional (arte original preservada), seção, cidade e estado. Novos modelos gerados em canvas, com espaço para adesivo e mapa municipal do segundo turno vindo dos mesmos dados do site. Carregamento só ao aproximar da galeria; imagens reutilizadas em memória.
+
+Auditoria em Chromium real: 19 verificações passaram, incluindo tamanho dos quatro PNGs, arquivo correto ao selecionar/compartilhar, setas, rolagem, teclado, links por tema, ausência de download automático e de transbordamento em 320, 390, 430 e 1440 px. PNGs e capturas inspecionados visualmente. Relatório: `tests/story-carousel-review-2026-10-27.json`.
+
+O envio nativo e a área de transferência foram simulados para verificar os arquivos e argumentos. Não foram testados Instagram/WhatsApp reais nem iPhone físico. O adesivo de link continua sendo adicionado pelo usuário no Instagram.

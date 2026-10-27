@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-27T10:39:30.492Z",
+  "results": [
+    {
+      "name": "Quatro PNGs 1080×1920 sem compartilhamento ou download automático",
+      "pass": true
+    },
+    {
+      "name": "Seleciona e compartilha o arquivo correto 0",
+      "pass": true
+    },
+    {
+      "name": "Seleciona e compartilha o arquivo correto 1",
+      "pass": true
+    },
+    {
+      "name": "Seleciona e compartilha o arquivo correto 2",
+      "pass": true
+    },
+    {
+      "name": "Seleciona e compartilha o arquivo correto 3",
+      "pass": true
+    },
+    {
+      "name": "Setas anterior e próxima selecionam cards",
+      "pass": true
+    },
+    {
+      "name": "Arrastar o carrossel atualiza seleção",
+      "pass": true
+    },
+    {
+      "name": "Teclado seleciona o próximo card",
+      "pass": true
+    },
+    {
+      "name": "Copiar link corresponde ao card selecionado",
+      "pass": true
+    },
+    {
+      "name": "Carrossel sem transbordamento da página em 320px",
+      "pass": true
+    },
+    {
+      "name": "Último card permanece selecionado em 320px",
+      "pass": true
+    },
+    {
+      "name": "Carrossel sem transbordamento da página em 390px",
+      "pass": true
+    },
+    {
+      "name": "Último card permanece selecionado em 390px",
+      "pass": true
+    },
+    {
+      "name": "Carrossel sem transbordamento da página em 430px",
+      "pass": true
+    },
+    {
+      "name": "Último card permanece selecionado em 430px",
+      "pass": true
+    },
+    {
+      "name": "Carrossel sem transbordamento da página em 1440px",
+      "pass": true
+    },
+    {
+      "name": "Último card permanece selecionado em 1440px",
+      "pass": true
+    },
+    {
+      "name": "Nenhum download iniciado ao escolher e compartilhar",
+      "pass": true
+    },
+    {
+      "name": "Sem exceções JavaScript",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "httpErrors": [],
+  "note": "Browser Chromium real; navigator.share e clipboard simulados. Instagram, WhatsApp e iPhone físico não testados."
+}

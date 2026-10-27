@@ -1,3 +1,4 @@
+import { STORY_CARDS, drawStoryHook } from './story-cards.js';
 import { territoryBreakdown } from './territory-math.js';
 'use strict';
 const $=id=>document.getElementById(id),fmt=new Intl.NumberFormat('pt-BR'),dec=new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}),num=n=>fmt.format(n),sign=n=>(n<0?'−':n>0?'+':'')+num(Math.abs(n)),pct=n=>Number.isFinite(n)?dec.format(n)+'%':'n/a',pp=n=>(n<0?'−':n>0?'+':'')+dec.format(Math.abs(n))+' p.p.';
@@ -56,7 +57,8 @@ function shareURL(local=false){const url=new URL(SITE_URL);if(local&&city){url.s
 async function sharePage(local=false){const url=shareURL(local),title=local&&city?`O que mudou em ${pretty(city.name)}-${city.uf}?`:'Lula ganhou 10 milhões de votos. De onde?',text=local&&city?'Veja os resultados dos dois turnos e consulte a votação da sua escola e seção.':'Entenda a virada, explore o mapa e consulte sua escola e seção. Dados oficiais do TSE.';if(navigator.share){try{await navigator.share({title,text,url});return;}catch(e){if(e.name==='AbortError')return;}}try{await navigator.clipboard.writeText(title+'\n'+text+'\n'+url);toast('Link copiado. É só colar no story ou na conversa.');}catch{$('shareStatus').textContent='Copie este link: '+url;toast('O link está no final da explicação para você copiar.');}}
 $('shareTop').onclick=()=>sharePage();$('shareMain').onclick=()=>sharePage();$('shareLocal').onclick=()=>sharePage(true);
 function drawWrapped(ctx,text,x,y,maxWidth,lineHeight){let line='';for(const word of text.split(' ')){const candidate=line?line+' '+word:word;if(ctx.measureText(candidate).width>maxWidth&&line){ctx.fillText(line,x,y);y+=lineHeight;line=word;}else line=candidate;}if(line)ctx.fillText(line,x,y);return y+lineHeight;}
-async function drawBrazilOnStory(ctx,x,y,w,h){const d=mapData||await getJSON('data/map.json'),results=await ensureData(),[minX,minY,maxX,maxY]=d.bounds,scale=Math.min((w-12)/(maxX-minX),(h-12)/(maxY-minY)),dx=x+(w-(maxX-minX)*scale)/2,dy=y+(h-(maxY-minY)*scale)/2;ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.translate(dx,dy);ctx.scale(scale,scale);ctx.translate(-minX,-minY);ctx.lineWidth=.35/scale;ctx.lineJoin='round';const byId=new Map(results.municipalities.map(m=>[m.id,m]));for(let i=0;i<d.map.length;i++){const shape=d.map[i],m=byId.get(shape.id),path=new Path2D(shape.d);ctx.fillStyle=m?(m.b[0]>m.b[1]?'#bb493d':m.b[0]<m.b[1]?'#28688f':'#b9c4b5'):'#b9c4b5';ctx.fill(path);ctx.strokeStyle='#f6f5ee';ctx.stroke(path);if(i%700===699)await new Promise(requestAnimationFrame);}ctx.lineWidth=.9/scale;ctx.strokeStyle='rgba(20,46,62,.5)';for(const shape of d.statePaths)ctx.stroke(new Path2D(shape.d));ctx.restore();}
+let storyMapPromise;
+async function drawBrazilOnStory(ctx,x,y,w,h){const d=mapData||await (storyMapPromise||=getJSON('data/map.json').catch(e=>{storyMapPromise=null;throw e;})),results=await ensureData(),[minX,minY,maxX,maxY]=d.bounds,scale=Math.min((w-12)/(maxX-minX),(h-12)/(maxY-minY)),dx=x+(w-(maxX-minX)*scale)/2,dy=y+(h-(maxY-minY)*scale)/2;ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.translate(dx,dy);ctx.scale(scale,scale);ctx.translate(-minX,-minY);ctx.lineWidth=.35/scale;ctx.lineJoin='round';const byId=new Map(results.municipalities.map(m=>[m.id,m]));for(let i=0;i<d.map.length;i++){const shape=d.map[i],m=byId.get(shape.id),path=new Path2D(shape.d);ctx.fillStyle=m?(m.b[0]>m.b[1]?'#bb493d':m.b[0]<m.b[1]?'#28688f':'#b9c4b5'):'#b9c4b5';ctx.fill(path);ctx.strokeStyle='#f6f5ee';ctx.stroke(path);if(i%700===699)await new Promise(requestAnimationFrame);}ctx.lineWidth=.9/scale;ctx.strokeStyle='rgba(20,46,62,.5)';for(const shape of d.statePaths)ctx.stroke(new Path2D(shape.d));ctx.restore();}
 function storyRoundRect(ctx,x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.stroke();}}
 function storyLabel(ctx,text,x,y,color='#286750'){ctx.fillStyle=color;ctx.font='700 24px Inter, Segoe UI, Arial, sans-serif';ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(text,x,y);}
 async function drawStoryCard(ctx){
@@ -85,24 +87,43 @@ async function sharePreparedStory(){
   if(!canShareStory()){$('shareStatus').textContent='O compartilhamento de imagem não está disponível neste navegador. O card está pronto para salvar abaixo.';return;}
   storyShareBusy=true;updateStoryShareControls();
   try{await navigator.share({files:[preparedStoryFile]});$('shareStatus').textContent='Card entregue ao compartilhamento do celular. Conclua a publicação no aplicativo escolhido e adicione o link, se necessário.';}
-  catch(e){$('shareStatus').textContent=e.name==='AbortError'?'Compartilhamento cancelado. O card continua pronto abaixo.':'Não foi possível abrir o compartilhamento. Toque em “Escolher aplicativo” para tentar novamente ou use “Salvar imagem”.';}
+  catch(e){$('shareStatus').textContent=e.name==='AbortError'?'Compartilhamento cancelado. O card continua pronto abaixo.':'Não foi possível abrir o compartilhamento. Toque em “Compartilhar esta imagem” para tentar novamente ou use “Salvar imagem”.';}
   finally{storyShareBusy=false;updateStoryShareControls();}
 }
 $('shareStoryCard').onclick=sharePreparedStory;
-$('copyStoryLink').onclick=async()=>{try{await navigator.clipboard.writeText(SITE_URL);$('shareStatus').textContent='Link copiado. No Instagram, adicione o adesivo Link e cole esse endereço no espaço reservado do card.';}catch{$('storyLinkValue').hidden=false;$('storyLinkValue').focus();$('storyLinkValue').select();$('shareStatus').textContent='Selecione e copie o endereço exibido abaixo para adicionar o link no aplicativo.';}};
-$('downloadStory').onclick=async()=>{
-  const button=$('downloadStory');button.disabled=true;$('shareStatus').textContent='Preparando o card para compartilhar…';
-  try{
-    await ensureData();const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;await drawStoryCard(canvas.getContext('2d'));
-    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('Não foi possível gerar a imagem.');
-    const url=URL.createObjectURL(blob),img=$('storyPreviewImage');if(img.src.startsWith('blob:'))URL.revokeObjectURL(img.src);
-    preparedStoryFile=typeof File==='function'?new File([blob],'a-virada-2026-story.png',{type:'image/png'}):null;
-    img.src=url;$('saveStoryCard').href=url;$('storyPreview').hidden=false;updateStoryShareControls();
-    $('shareStatus').textContent=canShareStory()?'Card pronto. Toque em “Escolher aplicativo” para enviar a imagem. Depois, copie o link para adicioná-lo no aplicativo.':'Card pronto. Este navegador não envia imagens a outros apps; você pode salvar a imagem abaixo.';
-    if(canShareStory()&&navigator.userActivation?.isActive)await sharePreparedStory();
-  }catch(e){$('shareStatus').textContent='Não foi possível preparar o card: '+e.message;}
-  finally{button.disabled=false;}
-};
+$('copyStoryLink').onclick=async()=>{try{await navigator.clipboard.writeText($('storyLinkValue').value);$('shareStatus').textContent='Link copiado. No Instagram, adicione o adesivo Link e cole esse endereço no espaço reservado do card.';}catch{$('storyLinkValue').hidden=false;$('storyLinkValue').focus();$('storyLinkValue').select();$('shareStatus').textContent='Selecione e copie o endereço exibido abaixo para adicionar o link no aplicativo.';}};
+let storyIndex=0,storySelection=0,storyScrollTimer;const storyCache=new Map(),storyJobs=new Map();
+$('storyTrack').innerHTML=STORY_CARDS.map((card,i)=>`<button type="button" class="story-slide" data-story="${i}" aria-pressed="${i===0}" aria-label="Selecionar: ${esc(card.title)}"><span class="story-slide-image"><img ${i===0?'id="storyPreviewImage"':''} alt="${esc(card.description)}" width="1080" height="1920"><span class="story-placeholder">${esc(card.title)}<small>Preparando imagem…</small></span></span><strong>${esc(card.title)}</strong><small>${esc(card.description)}</small></button>`).join('');
+$('storyDots').innerHTML=STORY_CARDS.map((card,i)=>`<button type="button" data-story="${i}" aria-label="Ver card: ${esc(card.title)}" aria-pressed="${i===0}"></button>`).join('');
+async function prepareStory(i){
+ if(storyCache.has(i))return storyCache.get(i);if(storyJobs.has(i))return storyJobs.get(i);
+ const job=(async()=>{await ensureData();const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;
+ if(i===0)await drawStoryCard(canvas.getContext('2d'));else await drawStoryHook(canvas.getContext('2d'),STORY_CARDS[i],drawBrazilOnStory);
+ const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('A imagem não foi gerada.');
+ const result={url:URL.createObjectURL(blob),file:new File([blob],STORY_CARDS[i].filename,{type:'image/png'})};storyCache.set(i,result);
+ const slide=$('storyTrack').children[i];slide.querySelector('img').src=result.url;slide.classList.add('ready');return result;})();
+ storyJobs.set(i,job);try{return await job;}finally{storyJobs.delete(i);}
+}
+async function selectStory(i,{scroll=true}={}){
+ storyIndex=Math.max(0,Math.min(STORY_CARDS.length-1,i));i=storyIndex;const version=++storySelection,card=STORY_CARDS[i];preparedStoryFile=null;
+ $('saveStoryCard').removeAttribute('href');$('saveStoryCard').setAttribute('aria-disabled','true');$('storySelectedTitle').textContent=card.title;
+ $('storyCounter').textContent=(i+1)+' de '+STORY_CARDS.length;$('storyPrev').disabled=i===0;$('storyNext').disabled=i===STORY_CARDS.length-1;
+ document.querySelectorAll('[data-story]').forEach(el=>el.setAttribute('aria-pressed',String(+el.dataset.story===i)));
+ $('storyLinkValue').value=new URL(card.path,SITE_URL).href;$('storyLinkValue').hidden=true;updateStoryShareControls();
+ if(scroll){const slide=$('storyTrack').children[i];$('storyTrack').scrollTo({left:slide.offsetLeft-4,behavior:'instant'});}
+ $('shareStatus').textContent='Preparando: '+card.title+'…';
+ try{const result=await prepareStory(i);if(version!==storySelection)return;preparedStoryFile=result.file;$('saveStoryCard').href=result.url;$('saveStoryCard').download=card.filename;$('saveStoryCard').removeAttribute('aria-disabled');updateStoryShareControls();$('shareStatus').textContent=card.title+' selecionado. Escolha um aplicativo ou salve a imagem.';}
+ catch(e){if(version===storySelection)$('shareStatus').textContent='Não foi possível preparar este card. Toque nele para tentar novamente. '+e.message;}
+}
+$('storyTrack').onclick=e=>{const b=e.target.closest('[data-story]');if(b)selectStory(+b.dataset.story);};
+$('storyDots').onclick=e=>{const b=e.target.closest('[data-story]');if(b)selectStory(+b.dataset.story);};
+$('storyPrev').onclick=()=>selectStory(storyIndex-1);$('storyNext').onclick=()=>selectStory(storyIndex+1);
+$('storyTrack').onkeydown=e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();selectStory(storyIndex+(e.key==='ArrowRight'?1:-1));}};
+$('storyTrack').onscroll=()=>{clearTimeout(storyScrollTimer);storyScrollTimer=setTimeout(()=>{const track=$('storyTrack');let nearest=0,distance=Infinity;[...track.children].forEach((slide,i)=>{const d=Math.abs(slide.offsetLeft-4-track.scrollLeft);if(d<distance){distance=d;nearest=i;}});if(nearest!==storyIndex)selectStory(nearest,{scroll:false});},180);};
+let galleryStarted=false;
+function startStoryGallery(){if(galleryStarted)return;galleryStarted=true;selectStory(0,{scroll:false});(async()=>{for(let i=1;i<STORY_CARDS.length;i++){try{await prepareStory(i);}catch{const slide=$('storyTrack').children[i];slide.querySelector('.story-placeholder small').textContent='Toque para tentar novamente';}}})();}
+$('downloadStory').onclick=()=>{startStoryGallery();selectStory(storyIndex);$('storyPreview').scrollIntoView({behavior:'smooth',block:'start'});};
+if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){observer.disconnect();startStoryGallery();}},{rootMargin:'100px'});observer.observe($('storyPreview'));}
 
 if('IntersectionObserver'in window){const mapObserver=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){mapObserver.disconnect();loadMap().catch(()=>{});}},{rootMargin:'150px'});mapObserver.observe($('mapa'));const navObserver=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting)document.querySelectorAll('.bottom-nav a').forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id));},{rootMargin:'-10% 0px -65% 0px'});for(const id of ['entenda','meu-voto','mapa','fontes'])navObserver.observe($(id));}
 const initialQuery=new URLSearchParams(location.search);ensureData().then(async()=>{const id=initialQuery.get('cidade');if(!id)return;const m=D.municipalities.find(m=>m.id===id);if(!m)return;await chooseCity(m);const z=+initialQuery.get('zona'),s=+initialQuery.get('secao');if(z&&s&&cityData){const sec=cityData.sections.find(r=>r[0]===z&&r[1]===s);if(sec)chooseSchool({type:'section',section:sec});}else if(initialQuery.has('local')&&cityData){const[z,n]=initialQuery.get('local').split('-').map(Number),i=cityData.locals.findIndex(l=>l.z===z&&l.n===n);if(i>=0)chooseSchool({type:'local',index:i});}$('meu-voto').scrollIntoView({behavior:'smooth'});}).catch(()=>{});
