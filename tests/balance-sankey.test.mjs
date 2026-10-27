@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {buildBalance,balanceSVG} from '../docs/balance-sankey.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../docs/data/'+p,import.meta.url),'utf8'));
-const overview=read('overview.json'),model=read('flow-bounds/bounds.json');
-const groups=m=>model.sourceGroups.slice(2,7).map((g,i)=>({id:g.key,label:g.label,value:m.X[i+2]}));
+const overview=read('overview.json'),model=read('balance/overview.json');
+const groups=m=>model.groups.map((g,i)=>({id:g.key,label:g.label,value:m[i]}));
 test('The national Sankey displays the exact net identity, with eight inputs and two gains',()=>{
  const b=buildBalance(overview.national,groups(model.national));
  assert.equal(b.total,14098232);assert.equal(b.net,14098232);assert.equal(b.sources.length,8);
@@ -14,7 +14,7 @@ test('The national Sankey displays the exact net identity, with eight inputs and
 });
 test('All municipalities, states and the national result close without a synthetic population adjustment',()=>{
  const files=new Map();
- for(const city of overview.municipalities){if(!files.has(city.uf))files.set(city.uf,read('flow-bounds/'+city.uf.toLowerCase()+'.json'));const b=buildBalance(city,groups(files.get(city.uf).cities[city.id]));assert.equal(b.net,(city.b[0]-city.a[0])+(city.b[1]-city.a[1]));}
+ for(const city of overview.municipalities){if(!files.has(city.uf))files.set(city.uf,read('balance/'+city.uf.toLowerCase()+'.json'));const b=buildBalance(city,groups(files.get(city.uf).cities[city.id]));assert.equal(b.net,(city.b[0]-city.a[0])+(city.b[1]-city.a[1]));}
  for(const state of overview.ufs)if(model.states[state.uf])buildBalance(state,groups(model.states[state.uf]));
 });
 test('Local declines move to the other side of the identity without negative ribbons',()=>{

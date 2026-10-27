@@ -30,3 +30,9 @@ O fluxo verificado foi seleção de Brasil/UF/município → arquivos estáticos
 Nove testes direcionados passaram (balance-sankey e territory-math): conferem a identidade em todos os 5.571 municípios publicados e estados, os valores nacionais, casos de queda local, parcelas negativas, ausência de mudança e rejeição de totais inconsistentes. O diagrama não usa o ajuste cadastral sintético das faixas.
 
 Dezessete verificações em Chrome real passaram: gráfico nacional, toque e teclado, Pernambuco, Recife, saldo negativo de Acrelândia, limites técnicos recolhidos, rede HTTP 200, ausência de exceções e de transbordamento em 320, 390, 430 e 1.440 pixels. Relatório: tests/balance-sankey-review-2026-10-27.json. As capturas de celular e computador foram inspecionadas. Mobile foi emulado; não houve teste em iPhone físico nem em Safari nesta revisão.
+
+## Interface do Sankey sem faixas de transferência · 27/10/2026
+
+A interface atual apresenta o Sankey, os totais oficiais e a conta exata dos saldos. Os controles de mínimos/máximos, o seletor de destino e os textos sobre versões anteriores foram removidos do HTML, do JavaScript em uso e das fontes da página. Os arquivos compactos em docs/data/balance/ contêm apenas as contagens das candidaturas eliminadas.
+
+Quatro testes numéricos do Sankey passaram com a nova base, incluindo a reconciliação de todos os municípios e estados. Dezenove verificações em Chrome real passaram; além das buscas, recortes, toque, teclado e larguras de 320/390/430/1.440 pixels, confirmam a ausência dos blocos antigos no DOM e que o app não solicita arquivos de limites. Relatório: tests/sankey-cleanup-review-2026-10-27.json. Sem teste em iPhone físico nesta revisão.

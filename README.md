@@ -19,7 +19,7 @@ Flávio começou com **2.224.965 votos de vantagem**. Entre os turnos, Lula cres
 =10.376.694  crescimento de Lula
 ```
 
-A identidade compara **saldos agregados**. Não identifica transferências individuais nem demonstra, sozinha, causas políticas da vitória. A seção revisada publica limites matemáticos, sem estimativa central de transferência. Não identifica o voto de pessoas, alunos ou funcionários de escolas.
+A identidade compara **saldos agregados**. Não identifica transferências individuais nem demonstra, sozinha, causas políticas da vitória. O Sankey apresenta a conta dos saldos oficiais. Não identifica o voto de pessoas, alunos ou funcionários de escolas.
 
 ## Consulta por escola e seção
 
@@ -86,27 +86,14 @@ Sem cadastro, título eleitoral, CPF, geolocalização ou bibliotecas de rastrea
 
 Código deste projeto: licença MIT. Dados eleitorais: TSE, com atribuição conforme o portal. Geografia: IBGE, com atribuição. Este projeto não é um site oficial da Justiça Eleitoral.
 
-## Análise de migração revisada em 27/10/2026
+## Dados do Sankey
 
-As taxas centrais do modelo anterior foram retiradas da interface: as somas fechavam, mas as transferências não foram validadas. Não trocamos os percentuais por valores escolhidos para parecerem mais plausíveis. O modelo antigo e seus diagnósticos ficam arquivados em docs/data/migration/ para permitir examinar a correção; não são usados pela interface atual.
+A base local inclui 5.571 municípios e 186 recortes no exterior. O manifesto lista 11.514 arquivos locais (5.757 recortes × 2 turnos); a auditoria ampla conta 11.572 ao acrescentar 58 agregados (27 UFs, Exterior e Brasil × 2 turnos). O app lê as contagens dos candidatos eliminados em docs/data/balance/ e os totais oficiais em docs/data/overview.json. Para preparar os arquivos compactos, execute node scripts/build-balance-inputs.mjs.
 
-A comparação publica os saldos oficiais e limites de tabelas de contingência (Duncan–Davis): para cada célula, máximo(0, X + Y − N) e mínimo(X,Y). Calculamos por unidade e somamos os limites por UF e Brasil. Esses extremos são atingíveis separadamente sob a hipótese de população local comum e equivalente, equilibrada com ajuste cadastral. No país, a soma das bases comuns locais é 158.755.026, enquanto os grupos observados somam 158.745.079; o fechamento de 9.947 é contábil, não voto ou pessoa identificada, e entra no denominador, podendo alargar as faixas. Não são intervalos de confiança, probabilidades ou faixas prováveis. Extremos diferentes não precisam ser compatíveis simultaneamente.
-
-A base local inclui 5.571 municípios e 186 recortes no exterior. O manifesto lista 11.514 arquivos locais (5.757 recortes × 2 turnos); a auditoria ampla conta 11.572 ao acrescentar 58 arquivos agregados (27 UFs, Exterior e Brasil × 2 turnos). Lula, Flávio, Cury, Caiado, Renan, Zema e outros candidatos têm grupos separados. Ausência e brancos/nulos são separados. Fórmulas: docs/migration-bounds.js; entradas e hashes oficiais: docs/data/migration/inputs.json e sources.json; saídas: docs/data/flow-bounds/. Reconstrua com:
-
-```sh
-node scripts/build-flow-bounds.mjs
-npm test
-```
-
-Fontes metodológicas: [Imai, Lu e Strauss, método de limites](https://imai.fas.harvard.edu/software/files/eco.pdf), [Forcina e Pellegrino, viés ecológico em transições](https://arxiv.org/abs/1411.4411), [Jiang e colaboradores, identificação parcial](https://arxiv.org/abs/1804.05803).
-
-Contexto consultado: [CNN, 20/10/2026](https://www.cnnbrasil.com.br/eleicoes/analise-a-aritmetica-da-ausencia/) e [Quaest, 22/10/2026](https://quaest.com.br/segundo-turno-2026-votos-brancos-nulos/). São análises anteriores ao resultado, não medições de transferências efetivas. As intenções divulgadas não foram impostas às urnas ou a municípios.
-
-Exemplos públicos de navegação e testes usam São Paulo-SP e Recife-PE. O cadastro oficial permanece completo, sem associar qualquer município à localização do mantenedor.
+Exemplos públicos de navegação usam São Paulo-SP e Recife-PE. O cadastro oficial permanece completo.
 
 ## Diagrama Sankey dos saldos oficiais
 
-A visualização principal de #migracao mostra uma identidade contábil, com um nó intermediário de balanço: votos válidos dos candidatos eliminados + variação do comparecimento + redução de brancos + redução de nulos = ganhos líquidos de Lula e Flávio. Os cinco grupos de eliminados permanecem separados. Nenhuma faixa conecta uma candidatura eliminada ou um grupo de inválidos diretamente a um finalista. A conta usa o comparecimento oficial e não incorpora a base populacional sintética dos limites.
+A visualização principal de #migracao mostra uma identidade contábil, com um nó intermediário de balanço: votos válidos dos candidatos eliminados + variação do comparecimento + redução de brancos + redução de nulos = ganhos líquidos de Lula e Flávio. Os cinco grupos de eliminados permanecem separados. Nenhuma faixa conecta uma candidatura eliminada ou um grupo de inválidos diretamente a um finalista. A conta usa o comparecimento oficial de cada turno.
 
-Em recortes com parcelas negativas, o módulo move essas parcelas para o outro lado da igualdade, sem desenhar espessuras negativas. Assim, uma queda de candidato pode aparecer à esquerda e uma queda de comparecimento, à direita. O balanço pode exceder o crescimento líquido; ambos são identificados. Toque e teclado mostram a explicação de cada parcela. A implementação está em docs/balance-sankey.js. Os limites individuais, inclusive os de 0% a 100%, ficam numa explicação técnica recolhida. Eles não são uma estimativa de migração.
+Em recortes com parcelas negativas, o módulo move essas parcelas para o outro lado da igualdade, sem desenhar espessuras negativas. Assim, uma queda de candidato pode aparecer à esquerda e uma queda de comparecimento, à direita. O balanço pode exceder o crescimento líquido; ambos são identificados. Toque e teclado mostram a explicação de cada parcela. A implementação está em docs/balance-sankey.js. O gráfico compara saldos agregados e não estima migração individual.
