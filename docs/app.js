@@ -1,5 +1,5 @@
 import { initMigration } from './migration-ui.js?v=7';
-import { STORY_CARDS, drawStoryHook } from './story-cards.js';
+import { STORY_CARDS } from './story-cards.js';
 import { territoryBreakdown } from './territory-math.js';
 'use strict';
 const $=id=>document.getElementById(id),fmt=new Intl.NumberFormat('pt-BR'),dec=new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}),dec3=new Intl.NumberFormat('pt-BR',{minimumFractionDigits:3,maximumFractionDigits:3}),share3=n=>Math.round(n*1000)/1000,pct3=n=>dec3.format(share3(n))+'%',pp3=n=>(n<0?'−':n>0?'+':'')+dec3.format(Math.abs(n))+' p.p.',num=n=>fmt.format(n),sign=n=>(n<0?'−':n>0?'+':'')+num(Math.abs(n)),pct=n=>Number.isFinite(n)?dec.format(n)+'%':'n/a',pp=n=>(n<0?'−':n>0?'+':'')+dec.format(Math.abs(n))+' p.p.';
@@ -57,28 +57,15 @@ function toast(text){$('toast').textContent=text;$('toast').hidden=false;clearTi
 function shareURL(local=false){const url=new URL(SITE_URL);if(local&&city){url.searchParams.set('cidade',city.id);if(localScope==='section'&&selectedSection){url.searchParams.set('zona',selectedSection[0]);url.searchParams.set('secao',selectedSection[1]);}else if(localScope==='section'&&schoolCompare){const l=cityData.locals[schoolCompare.local];url.searchParams.set('local',l.z+'-'+l.n);}}return url.href;}
 async function sharePage(local=false){const url=shareURL(local),title=local&&city?`O que mudou em ${pretty(city.name)}-${city.uf}?`:'Lula ganhou 10 milhões de votos. De onde?',text=local&&city?'Veja os resultados dos dois turnos e consulte a votação da sua escola e seção.':'Entenda a virada, explore o mapa e consulte sua escola e seção. Dados oficiais do TSE.';if(navigator.share){try{await navigator.share({title,text,url});return;}catch(e){if(e.name==='AbortError')return;}}try{await navigator.clipboard.writeText(title+'\n'+text+'\n'+url);toast('Link copiado. É só colar no story ou na conversa.');}catch{$('shareStatus').textContent='Copie este link: '+url;toast('O link está no final da explicação para você copiar.');}}
 $('shareTop').onclick=()=>sharePage();$('shareMain').onclick=()=>sharePage();$('shareLocal').onclick=()=>sharePage(true);
-function drawWrapped(ctx,text,x,y,maxWidth,lineHeight){let line='';for(const word of text.split(' ')){const candidate=line?line+' '+word:word;if(ctx.measureText(candidate).width>maxWidth&&line){ctx.fillText(line,x,y);y+=lineHeight;line=word;}else line=candidate;}if(line)ctx.fillText(line,x,y);return y+lineHeight;}
-let storyMapPromise;
-async function drawBrazilOnStory(ctx,x,y,w,h){const d=mapData||await (storyMapPromise||=getJSON('data/map.json').catch(e=>{storyMapPromise=null;throw e;})),results=await ensureData(),[minX,minY,maxX,maxY]=d.bounds,scale=Math.min((w-12)/(maxX-minX),(h-12)/(maxY-minY)),dx=x+(w-(maxX-minX)*scale)/2,dy=y+(h-(maxY-minY)*scale)/2;ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.translate(dx,dy);ctx.scale(scale,scale);ctx.translate(-minX,-minY);ctx.lineWidth=.35/scale;ctx.lineJoin='round';const byId=new Map(results.municipalities.map(m=>[m.id,m]));for(let i=0;i<d.map.length;i++){const shape=d.map[i],m=byId.get(shape.id),path=new Path2D(shape.d);ctx.fillStyle=m?(m.b[0]>m.b[1]?'#bb493d':m.b[0]<m.b[1]?'#28688f':'#b9c4b5'):'#b9c4b5';ctx.fill(path);ctx.strokeStyle='#f6f5ee';ctx.stroke(path);if(i%700===699)await new Promise(requestAnimationFrame);}ctx.lineWidth=.9/scale;ctx.strokeStyle='rgba(20,46,62,.5)';for(const shape of d.statePaths)ctx.stroke(new Path2D(shape.d));ctx.restore();}
 function storyRoundRect(ctx,x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.stroke();}}
-function storyLabel(ctx,text,x,y,color='#286750'){ctx.fillStyle=color;ctx.font='700 24px Inter, Segoe UI, Arial, sans-serif';ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText(text,x,y);}
-async function drawStoryCard(ctx){
-  const template=new Image();template.src='images/story-card-template.png';await template.decode();
-  const artwork=document.createElement('canvas');artwork.width=1080;artwork.height=1920;
-  const a=artwork.getContext('2d');a.drawImage(template,0,0,1080,1920);
-  // Preserve the supplied artwork and replace its illustrative map with the official municipal result.
-  a.fillStyle='#f6f5ee';a.fillRect(34,650,478,472);
-  a.beginPath();a.ellipse(280,890,238,228,0,0,Math.PI*2);a.fillStyle='#eeeee6';a.fill();
-  await drawBrazilOnStory(a,54,650,452,470);
-  a.fillStyle='#f7f6ee';a.fillRect(270,1784,560,52);
-  a.fillStyle='#175d4b';a.font='700 28px Inter, Segoe UI, Arial, sans-serif';a.textAlign='center';a.textBaseline='middle';a.fillText(new URL(SITE_URL).hostname,540,1808);
-  // Scale uniformly and insert a small link-sticker band between the map and the growth figures.
-  const scale=1000/1080,split=1125,top=split*scale,bottom=(1920-split)*scale,gap=1920-top-bottom;
-  ctx.fillStyle='#f6f5ee';ctx.fillRect(0,0,1080,1920);
-  ctx.drawImage(artwork,0,0,1080,split,40,0,1000,top);
-  ctx.drawImage(artwork,0,split,1080,1920-split,40,top+gap,1000,bottom);
-  ctx.save();ctx.lineWidth=1.5;ctx.setLineDash([7,7]);storyRoundRect(ctx,250,top+30,580,gap-52,15,'#faf9f2','#ccd5c8');ctx.restore();
-  ctx.fillStyle='#64736f';ctx.font='700 18px Inter, Segoe UI, Arial, sans-serif';ctx.textAlign='center';ctx.fillText('ESPAÇO PARA O ADESIVO DE LINK',540,top+20);
+async function drawPhotoStory(ctx,card){
+ const image=new Image();image.src=card.image;await image.decode();
+ ctx.drawImage(image,0,0,1080,1920);
+ const sticker=card.linkLabel,host=new URL(SITE_URL).hostname;
+ ctx.save();ctx.scale(1.5,1.5);ctx.textAlign='center';ctx.textBaseline='middle';
+ if(sticker.pill){storyRoundRect(ctx,sticker.x-sticker.width/2,sticker.y-17,sticker.width,34,9,'rgba(250,249,243,.92)');}
+ ctx.fillStyle='#142e3e';ctx.font=`700 ${sticker.size}px Inter, Segoe UI, Arial, sans-serif`;
+ ctx.fillText(host,sticker.x,sticker.y,sticker.width-18);ctx.restore();
 }
 let preparedStoryFile=null,storyShareBusy=false;
 function canShareStory(){try{return !!(preparedStoryFile&&navigator.share&&navigator.canShare&&navigator.canShare({files:[preparedStoryFile]}));}catch{return false;}}
@@ -98,10 +85,10 @@ $('storyTrack').innerHTML=STORY_CARDS.map((card,i)=>`<button type="button" class
 $('storyDots').innerHTML=STORY_CARDS.map((card,i)=>`<button type="button" data-story="${i}" aria-label="Ver card: ${esc(card.title)}" aria-pressed="${i===0}"></button>`).join('');
 async function prepareStory(i){
  if(storyCache.has(i))return storyCache.get(i);if(storyJobs.has(i))return storyJobs.get(i);
- const job=(async()=>{await ensureData();const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;
- if(i===0)await drawStoryCard(canvas.getContext('2d'));else await drawStoryHook(canvas.getContext('2d'),STORY_CARDS[i],drawBrazilOnStory);
- const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('A imagem não foi gerada.');
- const result={url:URL.createObjectURL(blob),file:new File([blob],STORY_CARDS[i].filename,{type:'image/png'})};storyCache.set(i,result);
+ const job=(async()=>{const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;
+ await drawPhotoStory(canvas.getContext('2d'),STORY_CARDS[i]);
+ const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.94));if(!blob)throw Error('A imagem não foi gerada.');
+ const result={url:URL.createObjectURL(blob),file:new File([blob],STORY_CARDS[i].filename,{type:'image/jpeg'})};storyCache.set(i,result);
  const slide=$('storyTrack').children[i];slide.querySelector('img').src=result.url;slide.classList.add('ready');return result;})();
  storyJobs.set(i,job);try{return await job;}finally{storyJobs.delete(i);}
 }
