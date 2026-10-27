@@ -77,7 +77,32 @@ async function drawStoryCard(ctx){
   ctx.save();ctx.lineWidth=1.5;ctx.setLineDash([7,7]);storyRoundRect(ctx,250,top+30,580,gap-52,15,'#faf9f2','#ccd5c8');ctx.restore();
   ctx.fillStyle='#64736f';ctx.font='700 18px Inter, Segoe UI, Arial, sans-serif';ctx.textAlign='center';ctx.fillText('ESPAÇO PARA O ADESIVO DE LINK',540,top+20);
 }
-$('downloadStory').onclick=async()=>{const button=$('downloadStory');button.disabled=true;$('shareStatus').textContent='Montando o card para Stories com o mapa oficial…';try{await ensureData();const c=document.createElement('canvas');c.width=1080;c.height=1920;const x=c.getContext('2d');await drawStoryCard(x);const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));if(!blob)throw Error('Não foi possível gerar a imagem.');const u=URL.createObjectURL(blob),img=$('storyPreviewImage');if(img.src.startsWith('blob:'))URL.revokeObjectURL(img.src);img.src=u;$('saveStoryCard').href=u;$('storyPreview').hidden=false;const a=document.createElement('a');a.href=u;a.download='a-virada-2026-story.png';a.click();$('shareStatus').textContent='Card pronto. Confira a prévia e adicione o adesivo Link no Instagram para explorar o site avirada.pages.dev.';}catch(e){$('shareStatus').textContent='Não foi possível montar o card: '+e.message;}finally{button.disabled=false;}};
+let preparedStoryFile=null,storyShareBusy=false;
+function canShareStory(){try{return !!(preparedStoryFile&&navigator.share&&navigator.canShare&&navigator.canShare({files:[preparedStoryFile]}));}catch{return false;}}
+function updateStoryShareControls(){const supported=canShareStory();$('shareStoryCard').disabled=!supported||storyShareBusy;$('storyShareHelp').textContent=supported?'No menu do celular, escolha Instagram ou WhatsApp, se aparecerem. O aplicativo escolhido define as opções de Story, Status ou conversa.':'Este navegador não oferece compartilhamento de imagens com outros apps. Use “Salvar imagem” e abra o card no aplicativo em que quer publicar.';}
+async function sharePreparedStory(){
+  if(storyShareBusy)return;
+  if(!canShareStory()){$('shareStatus').textContent='O compartilhamento de imagem não está disponível neste navegador. O card está pronto para salvar abaixo.';return;}
+  storyShareBusy=true;updateStoryShareControls();
+  try{await navigator.share({files:[preparedStoryFile]});$('shareStatus').textContent='Card entregue ao compartilhamento do celular. Conclua a publicação no aplicativo escolhido e adicione o link, se necessário.';}
+  catch(e){$('shareStatus').textContent=e.name==='AbortError'?'Compartilhamento cancelado. O card continua pronto abaixo.':'Não foi possível abrir o compartilhamento. Toque em “Escolher aplicativo” para tentar novamente ou use “Salvar imagem”.';}
+  finally{storyShareBusy=false;updateStoryShareControls();}
+}
+$('shareStoryCard').onclick=sharePreparedStory;
+$('copyStoryLink').onclick=async()=>{try{await navigator.clipboard.writeText(SITE_URL);$('shareStatus').textContent='Link copiado. No Instagram, adicione o adesivo Link e cole esse endereço no espaço reservado do card.';}catch{$('storyLinkValue').hidden=false;$('storyLinkValue').focus();$('storyLinkValue').select();$('shareStatus').textContent='Selecione e copie o endereço exibido abaixo para adicionar o link no aplicativo.';}};
+$('downloadStory').onclick=async()=>{
+  const button=$('downloadStory');button.disabled=true;$('shareStatus').textContent='Preparando o card para compartilhar…';
+  try{
+    await ensureData();const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;await drawStoryCard(canvas.getContext('2d'));
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('Não foi possível gerar a imagem.');
+    const url=URL.createObjectURL(blob),img=$('storyPreviewImage');if(img.src.startsWith('blob:'))URL.revokeObjectURL(img.src);
+    preparedStoryFile=typeof File==='function'?new File([blob],'a-virada-2026-story.png',{type:'image/png'}):null;
+    img.src=url;$('saveStoryCard').href=url;$('storyPreview').hidden=false;updateStoryShareControls();
+    $('shareStatus').textContent=canShareStory()?'Card pronto. Toque em “Escolher aplicativo” para enviar a imagem. Depois, copie o link para adicioná-lo no aplicativo.':'Card pronto. Este navegador não envia imagens a outros apps; você pode salvar a imagem abaixo.';
+    if(canShareStory()&&navigator.userActivation?.isActive)await sharePreparedStory();
+  }catch(e){$('shareStatus').textContent='Não foi possível preparar o card: '+e.message;}
+  finally{button.disabled=false;}
+};
 
 if('IntersectionObserver'in window){const mapObserver=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){mapObserver.disconnect();loadMap().catch(()=>{});}},{rootMargin:'150px'});mapObserver.observe($('mapa'));const navObserver=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting)document.querySelectorAll('.bottom-nav a').forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id));},{rootMargin:'-10% 0px -65% 0px'});for(const id of ['entenda','meu-voto','mapa','fontes'])navObserver.observe($(id));}
 const initialQuery=new URLSearchParams(location.search);ensureData().then(async()=>{const id=initialQuery.get('cidade');if(!id)return;const m=D.municipalities.find(m=>m.id===id);if(!m)return;await chooseCity(m);const z=+initialQuery.get('zona'),s=+initialQuery.get('secao');if(z&&s&&cityData){const sec=cityData.sections.find(r=>r[0]===z&&r[1]===s);if(sec)chooseSchool({type:'section',section:sec});}else if(initialQuery.has('local')&&cityData){const[z,n]=initialQuery.get('local').split('-').map(Number),i=cityData.locals.findIndex(l=>l.z===z&&l.n===n);if(i>=0)chooseSchool({type:'local',index:i});}$('meu-voto').scrollIntoView({behavior:'smooth'});}).catch(()=>{});

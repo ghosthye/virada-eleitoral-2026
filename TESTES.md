@@ -79,3 +79,10 @@ A checagem do endereço do espelho encontrou respostas 500 nas rotas de dados. O
 ### Confirmação após publicar
 
 A versão de código `281653ec506e31f566018d6dd41e1098abfc5670` foi enviada à branch `main` após a autorização do usuário. Cloudflare Pages (avirada.pages.dev) e GitHub Pages responderam HTTP 200 com o HTML novo, incluindo módulo app.js v21 e as perguntas da revisão. As mesmas 16 verificações de navegador passaram contra https://avirada.pages.dev/, incluindo a API real de boletins e o retry após uma resposta 503 simulada com CORS. O relatório JSON inclui os resultados de produção. Não há promessa de disponibilidade futura das fontes externas.
+
+## Compartilhamento de imagem sem download automático (27/10/2026)
+
+- Preparar o card gera a prévia e um arquivo PNG em memória. O app não chama mais o download automaticamente. Em navegadores com compartilhamento de arquivos, usa o seletor nativo; se o preparo encerrar a ativação temporária, o botão “Escolher aplicativo” inicia o envio em um novo toque. O usuário ainda pode usar “Salvar imagem” explicitamente.
+- O envio nativo contém somente o File PNG. O site não promete selecionar Instagram/WhatsApp, abrir Stories/Status nem posicionar um adesivo clicável. Há botão para copiar o endereço e alternativa de seleção manual se o clipboard falhar.
+- 14 verificações passaram: quatro larguras sem excesso horizontal, legenda da abertura, ausência de download automático em navegador sem suporte, payload PNG, ativação por toque real, abertura após preparo com ativação válida, cancelamento, bloqueio, cópia do link/fallback, canShare com erro e ausência de exceções JavaScript. As interfaces nativas de share/canShare/clipboard foram simuladas; o PNG e a prévia foram gerados de fato no navegador. Relatório: `tests/story-share-review-2026-10-27.json`.
+- Os 20 testes Node existentes passaram. Não houve teste físico em iPhone nem abertura real dos aplicativos Instagram e WhatsApp. A integração efetiva com cada aplicativo depende das opções que ele disponibiliza no aparelho.

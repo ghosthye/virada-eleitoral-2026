@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-27",
+  "environment": "Brave/Chromium headless; viewports 1440, 320, 390 e 430 px",
+  "results": [
+    {
+      "name": "Sem excesso horizontal em 1440px",
+      "pass": true
+    },
+    {
+      "name": "Legenda da abertura não sobrepõe os resultados",
+      "pass": true
+    },
+    {
+      "name": "Sem excesso horizontal em 320px",
+      "pass": true
+    },
+    {
+      "name": "Sem excesso horizontal em 390px",
+      "pass": true
+    },
+    {
+      "name": "Sem excesso horizontal em 430px",
+      "pass": true
+    },
+    {
+      "name": "Compartilhamento: ausência de suporte não inicia download",
+      "pass": true
+    },
+    {
+      "name": "Compartilhamento: PNG pronto e seleção de app em um novo toque",
+      "pass": true
+    },
+    {
+      "name": "Compartilhamento: toque real mantém ativação exigida pelo navegador",
+      "pass": true
+    },
+    {
+      "name": "Compartilhamento: preparo pode abrir o seletor quando a ativação continua válida",
+      "pass": true
+    },
+    {
+      "name": "Compartilhamento: cancelamento não baixa nem afirma publicação",
+      "pass": true
+    },
+    {
+      "name": "Compartilhamento: bloqueio permite repetir e salvar explicitamente",
+      "pass": true
+    },
+    {
+      "name": "Compartilhamento: copiar link e alternativa quando clipboard falha",
+      "pass": true
+    },
+    {
+      "name": "Compartilhamento: canShare indisponível ou com erro mantém imagem pronta",
+      "pass": true
+    },
+    {
+      "name": "Sem exceções JavaScript no navegador",
+      "pass": true
+    }
+  ],
+  "javascriptErrors": [],
+  "method": "Navegação e geração reais do PNG; navigator.share, navigator.canShare e clipboard substituídos por doubles controlados para testar suporte, dados enviados, cancelamento e falhas. A ativação do navegador foi verificada com evento de mouse real via CDP. O início automático de download foi monitorado em HTMLAnchorElement.click.",
+  "limitations": [
+    "Não testado em iPhone físico.",
+    "Não foi aberto o aplicativo Instagram nem WhatsApp; os destinos nativos dependem do sistema e dos apps instalados.",
+    "Web Share não permite escolher a tela Stories/Status nem fornecer coordenadas para um adesivo de link."
+  ],
+  "references": [
+    "https://www.w3.org/TR/web-share/",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share",
+    "https://webkit.org/blog/13862/the-user-activation-api/"
+  ]
+}
